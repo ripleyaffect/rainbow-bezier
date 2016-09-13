@@ -1,45 +1,71 @@
 import React, { Component } from 'react';
+import seedrandom from 'seedrandom'
+
 import './App.css';
 
 class BezierRainbow extends Component {
   static defaultProps = {
     numLines: 5,
-    height: 500,
-    width: 1250,
+    height: 200,
+    width: 500,
+    seed: 1,
   }
 
-  componentDidMount() {
-    const { height, numLines, width } = this.props
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      tick: 0
+    }
+  }
+
+  _getStartX = (seed) => {
+    return 0
+  }
+
+  _getStartY = (min, max, seed, entropy) => {
+    const val = Math.floor(seedrandom(seed + entropy)() * (max - min) + min)
+    return val
+  }
+
+  setLines = () => {
+    const { height, numLines, width, seed } = this.props
+    console.log(seed)
+    const entropy = Math.floor(seedrandom(seed)() * 2345676789)
 
     const ctx = this.canvas.getContext('2d')
-    ctx.setLineDash([5, 5]);
+    ctx.clearRect(0, 0, width, height)
+
+    ctx.setLineDash([1, 3]);
 
     for (let i=0; i < numLines; i++) {
       ctx.beginPath();
 
       // Give y values a buffer
-      const minPointY = height / 20
+      const minPointY = height / 200
       const maxPointY = height - minPointY
 
       // Set the starting position
-      const startX = 0
-      const startY = Math.floor(
-        Math.random() * (maxPointY - minPointY) + minPointY)
+      const startX = this._getStartX()
+      const startY = this._getStartY(minPointY, maxPointY, seed, i * entropy)
       ctx.moveTo(startX, startY);
 
-      const upFirst = Math.floor(Math.random() * 2)
+      const upFirst = Math.floor(seedrandom(seed + i + 11 * entropy)() + 0.5)
 
       // Set the curve values
-      const cp1X = width / 3 + (-1 * Math.floor(Math.random() - 0.5)) * (Math.random() * width / 2)
+      // console.log([-1, 1][Math.floor(seedrandom(seed + i * entropy)() + 0.499)])
+      const cp1X = width / 3 + [-1, 1][Math.floor(seedrandom(seed + i * entropy)() + 0.499)] * (seedrandom(seed + i + 2 * entropy)() * width / 3)
       const cp1Y = upFirst ?
-        0 + (Math.random() * height / 3)
-      : height - (Math.random() * height / 3)
-      const cp2X = width / 3 * 2 + (-1 * Math.floor(Math.random() - 0.5)) * (Math.random() * width / 2)
+        seedrandom(seed + i + 3 * entropy)() * height / 3
+      : height - (seedrandom(seed + i + 3 * entropy)() * height / 3)
+      // console.log([-1, 1][Math.floor(seedrandom(seed + i + 5 * entropy)() + 0.499)])
+      const cp2X = width / 3 * 2 + [-1, 1][Math.floor(seedrandom(seed + i + 5 * entropy)() + 0.499)] * (seedrandom(seed + i + 6 * entropy)() * width / 3)
+      console.log(width / 3 * 2 < cp2X)
       const cp2Y = upFirst ?
-        height - (Math.random() * minPointY)
-      : 0 + (Math.random() * minPointY)
+        height - (seedrandom(seed + i + 4 * entropy)() * minPointY)
+      : seedrandom(seed + i + 4 * entropy)() * minPointY
       const endX = width
-      const endY = startY + (-1 * Math.floor(Math.random() - 0.5)) * minPointY
+      const endY = startY + (-1 * Math.floor(seedrandom(seed + i + 9 * entropy)() - 0.5)) * minPointY
       ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
 
       // Set the color
@@ -50,9 +76,13 @@ class BezierRainbow extends Component {
       const green = Math.floor(Math.sin(frequency*i+0) * w + center);
       const blue = Math.floor(Math.sin(frequency*i+4) * w + center);
       ctx.strokeStyle = `rgb(${red}, ${green}, ${blue})`;
-      console.log(`rgb(${red}, ${green}, ${blue})`)
+      ctx.lineWidth = this.state.tick % 20;
       ctx.stroke();
     }
+  }
+
+  componentDidMount() {
+    this.setLines()
   }
 
   render() {
@@ -71,7 +101,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <BezierRainbow numLines={20}/>
+        <BezierRainbow numLines={20} seed={9}/>
+        <BezierRainbow numLines={20} seed={8}/>
+        <BezierRainbow numLines={20} seed={7}/>
+        <BezierRainbow numLines={20} seed={6}/>
       </div>
     );
   }
