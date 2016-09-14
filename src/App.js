@@ -76,8 +76,8 @@ class BezierRainbow extends Component {
   _getCP2Y = (upFirst, endY, minPointY, entropy) => {
     const { seed, height, yVariance } = this.props
     const val = upFirst ?
-      endY + seedrandom(seed + entropy)() * height * yVariance
-    : endY - seedrandom(seed + entropy)() * height * yVariance
+      endY + seedrandom(seed + entropy)() * height * 2 * yVariance
+    : endY - seedrandom(seed + entropy)() * height * 2 * yVariance
     return Math.max(0, Math.min(height, val))
   }
 
