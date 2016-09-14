@@ -120,7 +120,7 @@ class BezierRainbow extends Component {
 
       // Set the ending position
       const endX = this._getEndX()
-      const endY = this._getStartY(minPointY, maxPointY, startY, i * entropy * 3)
+      const endY = this._getEndY(minPointY, maxPointY, startY, i * entropy * 3)
 
       // Set the first control point values
       const cp1X = this._getCP1X(i * entropy * 4)
