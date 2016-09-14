@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import seedrandom from 'seedrandom'
 
-import './App.css';
+import './App.css'
 import logo from './logo.png'
 
 class BezierRainbow extends Component {
@@ -101,12 +101,12 @@ class BezierRainbow extends Component {
     ctx.clearRect(0, 0, width, height)
 
     // Set the line properties
-    ctx.setLineDash([dashSize, dashSpaceSize]);
-    ctx.lineWidth = lineWidth;
+    ctx.setLineDash([dashSize, dashSpaceSize])
+    ctx.lineWidth = lineWidth
 
     // Draw the lines
     for (let i=0; i < numLines; i++) {
-      ctx.beginPath();
+      ctx.beginPath()
 
       // Give y values a buffer
       const minPointY = this._getMinY()
@@ -132,18 +132,18 @@ class BezierRainbow extends Component {
       const cp2Y = this._getCP2Y(upFirst, endY, minPointY, i * entropy * 9)
 
       // Make the curve
-      ctx.moveTo(startX, startY);
-      ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
+      ctx.moveTo(startX, startY)
+      ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
 
       // Set the color
-      const center = 200;
-      const w = 80;
-      const frequency = Math.PI * 2 / numLines;
+      const center = 200
+      const w = 80
+      const frequency = Math.PI * 2 / numLines
       const red = Math.floor(Math.sin(frequency * i + 2) * w + center)
       const green = Math.floor(Math.sin(frequency * i + 0) * w + center)
       const blue = Math.floor(Math.sin(frequency * i + 4) * w + center)
       ctx.strokeStyle = `rgb(${red}, ${green}, ${blue})`
-      ctx.stroke();
+      ctx.stroke()
     }
   }
 
@@ -164,14 +164,14 @@ class BezierRainbow extends Component {
         className="bezier-rainbow"
         ref={c => this.canvas = c}
     />
-    );
+    )
   }
 }
 
 class App extends Component {
   constructor(props) {
     super(props)
-    
+
     this.state = {
       dashSize: 1,
       dashSpaceSize: 0,
@@ -371,8 +371,8 @@ class App extends Component {
           />
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
