@@ -7,6 +7,7 @@ class BezierRainbow extends Component {
   static defaultProps = {
     dashSize: 1,
     dashSpaceSize: 1,
+    lineWidth: 1,
     numLines: 5,
     height: 500,
     ratioUpFirst: 0.5,
@@ -85,6 +86,7 @@ class BezierRainbow extends Component {
       dashSize,
       dashSpaceSize,
       height,
+      lineWidth,
       numLines,
       width,
       seed,
@@ -97,8 +99,9 @@ class BezierRainbow extends Component {
     // Clear the canvas
     ctx.clearRect(0, 0, width, height)
 
-    // Set the line dash
+    // Set the line properties
     ctx.setLineDash([dashSize, dashSpaceSize]);
+    ctx.lineWidth = lineWidth;
 
     // Draw the lines
     for (let i=0; i < numLines; i++) {
@@ -172,6 +175,7 @@ class App extends Component {
       dashSize: 5,
       dashSpaceSize: 5,
       height: 500,
+      lineWidth: 1,
       numLines: 30,
       ratioUpFirst: 0.5,
       seed: 1,
@@ -193,6 +197,7 @@ class App extends Component {
       dashSize,
       dashSpaceSize,
       height,
+      lineWidth,
       numLines,
       ratioUpFirst,
       seed,
@@ -261,28 +266,6 @@ class App extends Component {
           {yBufferDivisor}
         </div>
         <div>
-          Dash Space Size: <input
-              value={dashSpaceSize}
-              type="range"
-              name="dash-space-size"
-              min="0"
-              max="10"
-              onChange={(e) => this.valueUpdater('dashSpaceSize')(e.target.value)}
-          />
-          {dashSpaceSize}px
-        </div>
-        <div>
-          Dash Size: <input
-              value={dashSize}
-              type="range"
-              name="dash-size"
-              min="1"
-              max="10"
-              onChange={(e) => this.valueUpdater('dashSize')(e.target.value)}
-          />
-          {dashSize}px
-        </div>
-        <div>
           Ratio up first: <input
               value={ratioUpFirst}
               type="range"
@@ -318,10 +301,44 @@ class App extends Component {
           />
           {yVariance * 100}%
         </div>
+        <div>
+          Dash Space Size: <input
+              value={dashSpaceSize}
+              type="range"
+              name="dash-space-size"
+              min="0"
+              max="10"
+              onChange={(e) => this.valueUpdater('dashSpaceSize')(e.target.value)}
+          />
+          {dashSpaceSize}px
+        </div>
+        <div>
+          Dash Size: <input
+              value={dashSize}
+              type="range"
+              name="dash-size"
+              min="1"
+              max="10"
+              onChange={(e) => this.valueUpdater('dashSize')(e.target.value)}
+          />
+          {dashSize}px
+        </div>
+        <div>
+          Line Width: <input
+              value={lineWidth}
+              type="range"
+              name="line-width"
+              min="1"
+              max="10"
+              onChange={(e) => this.valueUpdater('lineWidth')(e.target.value)}
+          />
+          {lineWidth}px
+        </div>
         <BezierRainbow
             dashSize={dashSize}
             dashSpaceSize={dashSpaceSize}
             height={height}
+            lineWidth={lineWidth}
             numLines={numLines}
             ratioUpFirst={Number(ratioUpFirst)}
             seed={seed}
