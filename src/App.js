@@ -12,9 +12,9 @@ class BezierRainbow extends Component {
     ratioUpFirst: 0.5,
     seed: 1,
     width: 1275,
-    xVarianceDivisor: 3,
+    xVariance: 0.5,
     yBufferDivisor: 20,
-    yVarianceDivisor: 1,
+    yVariance: 0.5,
   }
 
   _getMinY = () => {
@@ -47,35 +47,37 @@ class BezierRainbow extends Component {
   }
 
   _getCP1X = (entropy) => {
-    const { seed, width,xVarianceDivisor } = this.props
+    const { seed, width, xVariance } = this.props
     return (
       width / 3 +
       [-1, 1][Math.floor(seedrandom(seed + entropy)() + 0.5)] *
-      seedrandom(seed + entropy * 2)() * width / xVarianceDivisor
+      seedrandom(seed + entropy * 2)() * width * xVariance
     )
   }
 
-  _getCP1Y = (upFirst, startY, entropy) => {
-    const { seed, height, yVarianceDivisor } = this.props
-    return upFirst ?
-      Math.max(0, startY - seedrandom(seed + entropy)() * height / yVarianceDivisor)
-    : Math.min(height, startY + seedrandom(seed + entropy)() * height / yVarianceDivisor)
+  _getCP1Y = (upFirst, startY, minPointY, entropy) => {
+    const { seed, height, yVariance } = this.props
+    const val = upFirst ?
+      startY - seedrandom(seed + entropy)() * height * 2 * yVariance
+    : startY + seedrandom(seed + entropy)() * height * 2 * yVariance
+    return Math.max(0, Math.min(height, val))
   }
 
   _getCP2X = (entropy) => {
-    const { seed, width,xVarianceDivisor } = this.props
+    const { seed, width,xVariance } = this.props
     return (
       width / 3 * 2 +
       [-1, 1][Math.floor(seedrandom(seed + entropy)() + 0.5)] *
-      seedrandom(seed + entropy * 2)() * width / xVarianceDivisor
+      seedrandom(seed + entropy * 2)() * width * xVariance
     )
   }
 
-  _getCP2Y = (upFirst, endY, entropy) => {
-    const { seed, height, yVarianceDivisor } = this.props
-    return upFirst ?
-      Math.min(height, endY + seedrandom(seed + entropy)() * height/ yVarianceDivisor)
-    : Math.max(0, endY - seedrandom(seed + entropy)() * height/ yVarianceDivisor)
+  _getCP2Y = (upFirst, endY, minPointY, entropy) => {
+    const { seed, height, yVariance } = this.props
+    const val = upFirst ?
+      endY + seedrandom(seed + entropy)() * height * yVariance
+    : endY - seedrandom(seed + entropy)() * height * yVariance
+    return Math.max(0, Math.min(height, val))
   }
 
   setLines = () => {
@@ -119,11 +121,11 @@ class BezierRainbow extends Component {
 
       // Set the first control point values
       const cp1X = this._getCP1X(i * entropy * 4)
-      const cp1Y = this._getCP1Y(upFirst, startY, i + entropy * 5)
+      const cp1Y = this._getCP1Y(upFirst, startY, minPointY, i + entropy * 5)
 
       // Set the second control point values
       const cp2X = this._getCP2X(i * entropy * 5)
-      const cp2Y = this._getCP2Y(upFirst, endY, i * entropy * 9)
+      const cp2Y = this._getCP2Y(upFirst, endY, minPointY, i * entropy * 9)
 
       // Make the curve
       ctx.moveTo(startX, startY);
@@ -174,9 +176,9 @@ class App extends Component {
       ratioUpFirst: 0.5,
       seed: 1,
       width: 1275,
-      xVarianceDivisor: 3,
+      xVariance: 0.5,
       yBufferDivisor: 20,
-      yVarianceDivisor: 1,
+      yVariance: 0.5,
     }
   }
 
@@ -195,9 +197,9 @@ class App extends Component {
       ratioUpFirst,
       seed,
       width,
-      xVarianceDivisor,
+      xVariance,
       yBufferDivisor,
-      yVarianceDivisor,
+      yVariance,
     } = this.state
 
     return (
@@ -251,8 +253,9 @@ class App extends Component {
               value={yBufferDivisor}
               type="range"
               name="num-lines"
-              min="1"
-              max="25"
+              min={1}
+              max={15}
+              step={0.5}
               onChange={(e) => this.valueUpdater('yBufferDivisor')(e.target.value)}
           />
           {yBufferDivisor}
@@ -284,36 +287,36 @@ class App extends Component {
               value={ratioUpFirst}
               type="range"
               name="ratio-up-first"
-              min="0"
-              max="1"
-              step="0.1"
+              min={0}
+              max={1}
+              step={0.1}
               onChange={(e) => this.valueUpdater('ratioUpFirst')(e.target.value)}
           />
           {ratioUpFirst * 100}%
         </div>
         <div>
-          X Variance Divisor: <input
-              value={xVarianceDivisor}
+          X Variance: <input
+              value={xVariance}
               type="range"
               name="ratio-up-first"
-              min=".1"
-              max="15"
-              step=".1"
-              onChange={(e) => this.valueUpdater('xVarianceDivisor')(e.target.value)}
+              min="0"
+              max="1"
+              step=".01"
+              onChange={(e) => this.valueUpdater('xVariance')(e.target.value)}
           />
-          {xVarianceDivisor}
+          {xVariance * 100}%
         </div>
         <div>
-          Y Variance Divisor: <input
-              value={yVarianceDivisor}
+          Y Variance: <input
+              value={yVariance}
               type="range"
               name="ratio-up-first"
-              min="0.1"
-              max="15"
-              step=".1"
-              onChange={(e) => this.valueUpdater('yVarianceDivisor')(e.target.value)}
+              min="0"
+              max="1"
+              step=".01"
+              onChange={(e) => this.valueUpdater('yVariance')(e.target.value)}
           />
-          {yVarianceDivisor}
+          {yVariance * 100}%
         </div>
         <BezierRainbow
             dashSize={dashSize}
@@ -323,9 +326,9 @@ class App extends Component {
             ratioUpFirst={Number(ratioUpFirst)}
             seed={seed}
             width={width}
-            xVarianceDivisor={xVarianceDivisor}
+            xVariance={xVariance}
             yBufferDivisor={yBufferDivisor}
-            yVarianceDivisor={yVarianceDivisor}
+            yVariance={yVariance}
         />
       </div>
     );
