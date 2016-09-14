@@ -1,8 +1,77 @@
+.App {
+  font-size: 0;
+}
+
+.controls-container {
+  display: inline-block;
+  height: 100vh;
+  width: 200px;
+  overflow-y: scroll;
+  vertical-align: top;
+  padding-right: 15px;
+  padding-left: 10px;
+  background-color: #333;
+  color: #eee;
+}
+
 .controls {
-  
+  padding-bottom: 60px;
+}
+
+.logo {
+  display: block;
+  width: 50px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 30px;
+}
+
+.controls-header {
+  color: #fff;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+input[type="range"] {
+  display: block;
+  width: 100%;
+}
+
+input[type="checkbox"] {
+  margin-left: 10px;
+}
+
+.canvas-control {
+  position: relative;
+  margin-bottom: 20px;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 14px;
+}
+
+.control-value {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #888
+}
+
+.canvas-container {
+  display: inline-block;
+  position: relative;
+  height: 100vh;
+  width: calc(100% - 230px);
+  overflow: scroll;
+  border-left: 1px #fff solid;
+}
+
+.canvas-container__dark {
+  background-color: #333;
+  border-color: #222;
 }
 
 .bezier-rainbow {
-  display: block;
-  margin-bottom: 90px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }

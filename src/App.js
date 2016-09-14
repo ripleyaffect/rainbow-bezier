@@ -6,21 +6,21 @@ import './App.css';
 class BezierRainbow extends Component {
   static defaultProps = {
     dashSize: 1,
-    dashSpaceSize: 1,
+    dashSpaceSize: 0,
     lineWidth: 1,
-    numLines: 5,
+    numLines: 10,
     height: 500,
     ratioUpFirst: 0.5,
     seed: 1,
-    width: 1275,
-    xVariance: 0.5,
-    yBufferDivisor: 20,
+    width: 1000,
+    xVariance: 0.1,
+    startVariance: 0.5,
     yVariance: 0.5,
   }
 
   _getMinY = () => {
-    const { height, yBufferDivisor } = this.props
-    return Math.floor(height / yBufferDivisor)
+    const { height, startVariance } = this.props
+    return Math.floor(height / 2 + startVariance * height / 2)
   }
 
   _getUpFirst = (entropy) => {
@@ -65,7 +65,7 @@ class BezierRainbow extends Component {
   }
 
   _getCP2X = (entropy) => {
-    const { seed, width,xVariance } = this.props
+    const { seed, width, xVariance } = this.props
     return (
       width / 3 * 2 +
       [-1, 1][Math.floor(seedrandom(seed + entropy)() + 0.5)] *
@@ -172,17 +172,18 @@ class App extends Component {
     super(props)
     
     this.state = {
-      dashSize: 5,
-      dashSpaceSize: 5,
+      dashSize: 1,
+      dashSpaceSize: 0,
       height: 500,
-      lineWidth: 1,
+      lineWidth: 3,
       numLines: 30,
       ratioUpFirst: 0.5,
       seed: 1,
-      width: 1275,
-      xVariance: 0.5,
-      yBufferDivisor: 20,
+      width: 1000,
+      xVariance: 0.1,
+      startVariance: 0.5,
       yVariance: 0.5,
+      nightModeOn: false,
     }
   }
 
@@ -198,155 +199,176 @@ class App extends Component {
       dashSpaceSize,
       height,
       lineWidth,
+      nightModeOn,
       numLines,
       ratioUpFirst,
       seed,
       width,
       xVariance,
-      yBufferDivisor,
+      startVariance,
       yVariance,
     } = this.state
 
     return (
       <div className="App">
-        <div>
-          Height: <input
-              value={height}
-              type="range"
-              name="height"
-              min="20"
-              max="700"
-              onChange={(e) => this.valueUpdater('height')(e.target.value)}
-          />
-          {height}px
+        <div className="controls-container">
+          <div className="controls">
+            <img className="logo" src="http://i.imgur.com/TWM5ihp.png" alt="logo" />
+            <h4 className="controls-header">Controls</h4>
+            <div className="canvas-control">
+              Height <span className="control-value">{height}px</span>
+              <input
+                  value={height}
+                  type="range"
+                  name="height"
+                  min="20"
+                  max="700"
+                  onChange={(e) => this.valueUpdater('height')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Width <span className="control-value">{width}px</span>
+              <input
+                  value={width}
+                  type="range"
+                  name="width"
+                  min="20"
+                  max="1275"
+                  onChange={(e) => this.valueUpdater('width')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Seed <span className="control-value">{seed}</span>
+              <input
+                  value={seed}
+                  type="range"
+                  name="seed"
+                  min="1"
+                  max="300"
+                  onChange={(e) => this.valueUpdater('seed')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Number of Lines <span className="control-value">{numLines}</span>
+              <input
+                  value={numLines}
+                  type="range"
+                  name="num-lines"
+                  min="1"
+                  max="300"
+                  onChange={(e) => this.valueUpdater('numLines')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Start &amp; end variance <span className="control-value">{ratioUpFirst * 100}%</span>
+              <input
+                  value={startVariance}
+                  type="range"
+                  name="num-lines"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={(e) => this.valueUpdater('startVariance')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              X Variance <span className="control-value">{xVariance * 100}%</span>
+              <input
+                  value={xVariance}
+                  type="range"
+                  name="ratio-up-first"
+                  min="0"
+                  max="1"
+                  step=".01"
+                  onChange={(e) => this.valueUpdater('xVariance')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Y Variance <span className="control-value">{yVariance * 100}%</span>
+              <input
+                  value={yVariance}
+                  type="range"
+                  name="ratio-up-first"
+                  min="0"
+                  max="1"
+                  step=".01"
+                  onChange={(e) => this.valueUpdater('yVariance')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Ratio curving up first <span className="control-value">{ratioUpFirst * 100}%</span>
+              <input
+                  value={ratioUpFirst}
+                  type="range"
+                  name="ratio-up-first"
+                  min={0}
+                  max={1}
+                  step={0.1}
+                  onChange={(e) => this.valueUpdater('ratioUpFirst')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Dash Space Size <span className="control-value">{dashSpaceSize}px</span>
+              <input
+                  value={dashSpaceSize}
+                  type="range"
+                  name="dash-space-size"
+                  min="0"
+                  max="10"
+                  onChange={(e) => this.valueUpdater('dashSpaceSize')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Dash Size <span className="control-value">{dashSize}px</span>
+              <input
+                  value={dashSize}
+                  type="range"
+                  name="dash-size"
+                  min="1"
+                  max="10"
+                  onChange={(e) => this.valueUpdater('dashSize')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Line Width <span className="control-value">{lineWidth}px</span>
+              <input
+                  value={lineWidth}
+                  type="range"
+                  name="line-width"
+                  min="1"
+                  max="15"
+                  onChange={(e) => this.valueUpdater('lineWidth')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Night mode
+              <span className="control-value">
+                {nightModeOn ? 'on' : 'off'}
+                <input
+                    value={nightModeOn}
+                    type="checkbox"
+                    name="night-mode"
+                    onChange={(e) => this.valueUpdater('nightModeOn')(!nightModeOn)}
+                />
+              </span>
+            </div>
+          </div>
         </div>
-        <div>
-          Width: <input
-              value={width}
-              type="range"
-              name="width"
-              min="20"
-              max="1275"
-              onChange={(e) => this.valueUpdater('width')(e.target.value)}
+        <div className={`canvas-container${nightModeOn ? ' canvas-container__dark' : ''}`}>
+          <BezierRainbow
+              dashSize={dashSize}
+              dashSpaceSize={dashSpaceSize}
+              height={height}
+              lineWidth={lineWidth}
+              numLines={numLines}
+              ratioUpFirst={Number(ratioUpFirst)}
+              seed={seed}
+              width={width}
+              xVariance={xVariance}
+              startVariance={startVariance}
+              yVariance={yVariance}
           />
-          {width}px
         </div>
-        <div>
-          Seed: <input
-              value={seed}
-              type="range"
-              name="seed"
-              min="1"
-              max="300"
-              onChange={(e) => this.valueUpdater('seed')(e.target.value)}
-          />
-          {seed}
-        </div>
-        <div>
-          Number of Lines: <input
-              value={numLines}
-              type="range"
-              name="num-lines"
-              min="1"
-              max="300"
-              onChange={(e) => this.valueUpdater('numLines')(e.target.value)}
-          />
-          {numLines} lines
-        </div>
-        <div>
-          Y buffer divisor: <input
-              value={yBufferDivisor}
-              type="range"
-              name="num-lines"
-              min={1}
-              max={15}
-              step={0.5}
-              onChange={(e) => this.valueUpdater('yBufferDivisor')(e.target.value)}
-          />
-          {yBufferDivisor}
-        </div>
-        <div>
-          Ratio up first: <input
-              value={ratioUpFirst}
-              type="range"
-              name="ratio-up-first"
-              min={0}
-              max={1}
-              step={0.1}
-              onChange={(e) => this.valueUpdater('ratioUpFirst')(e.target.value)}
-          />
-          {ratioUpFirst * 100}%
-        </div>
-        <div>
-          X Variance: <input
-              value={xVariance}
-              type="range"
-              name="ratio-up-first"
-              min="0"
-              max="1"
-              step=".01"
-              onChange={(e) => this.valueUpdater('xVariance')(e.target.value)}
-          />
-          {xVariance * 100}%
-        </div>
-        <div>
-          Y Variance: <input
-              value={yVariance}
-              type="range"
-              name="ratio-up-first"
-              min="0"
-              max="1"
-              step=".01"
-              onChange={(e) => this.valueUpdater('yVariance')(e.target.value)}
-          />
-          {yVariance * 100}%
-        </div>
-        <div>
-          Dash Space Size: <input
-              value={dashSpaceSize}
-              type="range"
-              name="dash-space-size"
-              min="0"
-              max="10"
-              onChange={(e) => this.valueUpdater('dashSpaceSize')(e.target.value)}
-          />
-          {dashSpaceSize}px
-        </div>
-        <div>
-          Dash Size: <input
-              value={dashSize}
-              type="range"
-              name="dash-size"
-              min="1"
-              max="10"
-              onChange={(e) => this.valueUpdater('dashSize')(e.target.value)}
-          />
-          {dashSize}px
-        </div>
-        <div>
-          Line Width: <input
-              value={lineWidth}
-              type="range"
-              name="line-width"
-              min="1"
-              max="10"
-              onChange={(e) => this.valueUpdater('lineWidth')(e.target.value)}
-          />
-          {lineWidth}px
-        </div>
-        <BezierRainbow
-            dashSize={dashSize}
-            dashSpaceSize={dashSpaceSize}
-            height={height}
-            lineWidth={lineWidth}
-            numLines={numLines}
-            ratioUpFirst={Number(ratioUpFirst)}
-            seed={seed}
-            width={width}
-            xVariance={xVariance}
-            yBufferDivisor={yBufferDivisor}
-            yVariance={yVariance}
-        />
       </div>
     );
   }
