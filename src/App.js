@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import seedrandom from 'seedrandom'
 
 import './App.css';
+import logo from './logo.png'
 
 class BezierRainbow extends Component {
   static defaultProps = {
@@ -213,7 +214,7 @@ class App extends Component {
       <div className="App">
         <div className="controls-container">
           <div className="controls">
-            <img className="logo" src="http://i.imgur.com/TWM5ihp.png" alt="logo" />
+            <img className="logo" src={logo} alt="logo" />
             <h4 className="controls-header">Controls</h4>
             <div className="canvas-control">
               Height <span className="control-value">{height}px</span>
