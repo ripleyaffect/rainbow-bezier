@@ -46,6 +46,9 @@ Toggles night mode on / off
 
 ## Results
 
+![example_1](https://cloud.githubusercontent.com/assets/1026406/18519508/342b5c1a-7a72-11e6-9c81-6e1013d5427c.png)
+![example_2](https://cloud.githubusercontent.com/assets/1026406/18519509/342d048e-7a72-11e6-86e5-1bba8b1c764e.png)
+![example_3](https://cloud.githubusercontent.com/assets/1026406/18519507/34282356-7a72-11e6-87a3-b650180d6e79.png)
 
-
+---
 Made with 🍕 in New York by [ripleyaffect](https://github.com/ripleyaffect)
