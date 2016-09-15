@@ -6,6 +6,7 @@
     "react-scripts": "0.4.1"
   },
   "dependencies": {
+    "rainbowvis.js": "^1.0.1",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "seedrandom": "^2.4.2"

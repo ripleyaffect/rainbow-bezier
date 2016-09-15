@@ -1,11 +1,30 @@
+import Rainbow from 'rainbowvis.js'
 import React, { Component } from 'react'
 import seedrandom from 'seedrandom'
 
 import './App.css'
 import logo from './logo.png'
 
+const hexPairToNumber = (hexPair) => {
+  hexPair = hexPair.toUpperCase()
+  if (hexPair.length === 1) {
+    hexPair += hexPair
+  }
+  const hexMap = '0123456789ABCDEF'
+  return hexMap.indexOf(hexPair[0]) * 16 + hexMap.indexOf(hexPair[1])
+}
+
 class BezierRainbow extends Component {
   static defaultProps = {
+    colors: [
+      '#FFC887',
+      '#CEFB74',
+      '#82FBB6',
+      '#7CC7FF',
+      '#C17DFF',
+      '#FF7FD8',
+      '#FFC18C',
+    ],
     dashSize: 1,
     dashSpaceSize: 0,
     lineWidth: 1,
@@ -91,11 +110,17 @@ class BezierRainbow extends Component {
       numLines,
       width,
       seed,
+      colors,
     } = this.props
 
-    const entropyScalar = 2345676789
+    const entropyScalar = 791
     const entropy = Math.floor(seedrandom(seed)() * entropyScalar)
     const ctx = this.canvas.getContext('2d')
+
+    // Set up the color spectrum
+    const spectrum = new Rainbow()
+    spectrum.setNumberRange(0, numLines)
+    spectrum.setSpectrum(...colors)
 
     // Clear the canvas
     ctx.clearRect(0, 0, width, height)
@@ -136,12 +161,10 @@ class BezierRainbow extends Component {
       ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
 
       // Set the color
-      const center = 200
-      const w = 80
-      const frequency = Math.PI * 2 / numLines
-      const red = Math.floor(Math.sin(frequency * i + 2) * w + center)
-      const green = Math.floor(Math.sin(frequency * i + 0) * w + center)
-      const blue = Math.floor(Math.sin(frequency * i + 4) * w + center)
+      const hexColor = spectrum.colourAt(Math.floor(seedrandom(seed + i)() * numLines))
+      const red = hexPairToNumber(hexColor.slice(0, 2))
+      const green = hexPairToNumber(hexColor.slice(2, 4))
+      const blue = hexPairToNumber(hexColor.slice(4, 6))
       ctx.strokeStyle = `rgb(${red}, ${green}, ${blue})`
       ctx.stroke()
     }
