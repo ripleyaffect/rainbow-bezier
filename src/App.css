@@ -61,7 +61,7 @@ input[type="checkbox"] {
   height: 100vh;
   width: calc(100% - 230px);
   overflow: scroll;
-  border-left: 1px #fff solid;
+  border-left: 1px #333 solid;
 }
 
 .canvas-container__dark {
@@ -101,4 +101,40 @@ input[type="checkbox"] {
   position: absolute;
   top: -88px;
   left: 0;
+}
+
+.remove-color-button {
+  position: absolute;
+  font-size: 14px;
+  width: 90px;
+  top: -115px;
+  border-radius: 2px;
+  padding: 5px;
+  background-color: #FFAAA2;
+  color: #8F0500;
+  cursor: pointer;
+}
+
+.remove-color-button:hover {
+  background-color: #FF9A92;
+}
+
+.add-color-button {
+  position: relative;
+  display: inline-block;
+  height: 60px;
+  width: 60px;
+  background-color: #ddd;
+  cursor: pointer;
+}
+.add-color-button:hover  {
+  background-color: #d4d4d4;
+}
+
+.add-color-button-text {
+  position: absolute;
+  top: 11px;
+  left: 21px;
+  font-size: 30px;
+  color: #333;
 }

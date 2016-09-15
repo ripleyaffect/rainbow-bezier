@@ -6,6 +6,9 @@ import seedrandom from 'seedrandom'
 import './App.css'
 import logo from './logo.png'
 
+const MAX_NUM_COLORS = 7
+const MIN_NUM_COLORS = 2
+
 const hexPairToNumber = (hexPair) => {
   hexPair = hexPair.toUpperCase()
   if (hexPair.length === 1) {
@@ -230,11 +233,29 @@ class App extends Component {
 
   colorUpdater = (index) => {
     return (color) => {
+      console.log(color)
       this.setState({
         colors: this.state.colors.map(
-          (c, i) => index === i ? color.hex : c)
+          (c, i) => index === i ? color.hex.hex || color.hex : c)
       })
     }
+  }
+
+  colorRemover = (index) => {
+    return () => {
+      const { colors, colorEditingIndex } = this.state
+      this.setState({
+        colors: colors.filter((c, i) => index !== i),
+        colorEditingIndex: colorEditingIndex === index ? null : colorEditingIndex
+      })
+    }
+  }
+
+  addColor = () => {
+    const { colors } = this.state
+    this.setState({
+      colors: colors.concat(colors[colors.length - 1]),
+    })
   }
 
   render() {
@@ -254,6 +275,9 @@ class App extends Component {
       startVariance,
       yVariance,
     } = this.state
+
+    const canAddColor = colors.length < MAX_NUM_COLORS
+    const canRemoveColor = colors.length > MIN_NUM_COLORS
 
     return (
       <div className="App">
@@ -427,6 +451,12 @@ class App extends Component {
                         editing ? null : idx)}
                     style={{ backgroundColor: color }}
                 />
+                {editing && canRemoveColor &&
+                  <div
+                      className="remove-color-button"
+                      onClick={this.colorRemover(idx)}>
+                    Remove color
+                  </div>}
                 {editing &&
                   <div className="color-swatch-picker">
                     <CompactPicker
@@ -435,6 +465,11 @@ class App extends Component {
                   </div>}
               </div>
             })}
+            {canAddColor && <div
+                className="add-color-button"
+                onClick={this.addColor}>
+              <div className="add-color-button-text">+</div>
+            </div>}
           </div>
         </div>
       </div>
