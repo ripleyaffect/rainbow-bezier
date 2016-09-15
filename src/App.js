@@ -1,5 +1,6 @@
 import Rainbow from 'rainbowvis.js'
 import React, { Component } from 'react'
+import { CompactPicker } from 'react-color';
 import seedrandom from 'seedrandom'
 
 import './App.css'
@@ -196,6 +197,16 @@ class App extends Component {
     super(props)
 
     this.state = {
+      colors: [
+        '#FFC887',
+        '#CEFB74',
+        '#82FBB6',
+        '#7CC7FF',
+        '#C17DFF',
+        '#FF7FD8',
+        '#FFC18C',
+      ],
+      colorEditingIndex: null,
       dashSize: 1,
       dashSpaceSize: 0,
       height: 500,
@@ -217,8 +228,19 @@ class App extends Component {
     }
   }
 
+  colorUpdater = (index) => {
+    return (color) => {
+      this.setState({
+        colors: this.state.colors.map(
+          (c, i) => index === i ? color.hex : c)
+      })
+    }
+  }
+
   render() {
     const {
+      colors,
+      colorEditingIndex,
       dashSize,
       dashSpaceSize,
       height,
@@ -380,6 +402,7 @@ class App extends Component {
         </div>
         <div className={`canvas-container${nightModeOn ? ' canvas-container__dark' : ''}`}>
           <BezierRainbow
+              colors={colors}
               dashSize={dashSize}
               dashSpaceSize={dashSpaceSize}
               height={height}
@@ -392,6 +415,26 @@ class App extends Component {
               startVariance={startVariance}
               yVariance={yVariance}
           />
+          <div className="color-swatches">
+            {colors.map((color, idx) =>
+              <div className="color-swatch-group" key={idx}>
+                <div
+                    className="color-swatch"
+                    onClick={
+                      () => this.valueUpdater('colorEditingIndex')(
+                        colorEditingIndex === idx ? null : idx)
+                    }
+                    style={{ backgroundColor: color }}
+                />
+                {colorEditingIndex === idx &&
+                  <div className="color-swatch-picker">
+                    <CompactPicker
+                        color={color}
+                        onChange={this.colorUpdater(idx)} />
+                  </div>}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     )

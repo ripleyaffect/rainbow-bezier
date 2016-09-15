@@ -8,6 +8,8 @@
   "dependencies": {
     "rainbowvis.js": "^1.0.1",
     "react": "^15.3.1",
+    "react-addons-test-utils": "^15.3.1",
+    "react-color": "^2.2.7",
     "react-dom": "^15.3.1",
     "seedrandom": "^2.4.2"
   },
