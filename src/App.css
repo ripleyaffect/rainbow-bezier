@@ -138,3 +138,20 @@ input[type="checkbox"] {
   font-size: 30px;
   color: #333;
 }
+
+.share-holder {
+  position: relative;
+  display: inline-block;
+  padding: 18px;
+  width: 160px;
+  margin-top: 10px;
+  font-size: 16px;
+  overflow-y: scroll;
+  border: 3px #ddd solid;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.noselect {
+  user-select: none;
+}

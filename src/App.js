@@ -1,3 +1,4 @@
+import qs from 'qs'
 import Rainbow from 'rainbowvis.js'
 import React, { Component } from 'react'
 import { CompactPicker } from 'react-color';
@@ -6,7 +7,7 @@ import seedrandom from 'seedrandom'
 import './App.css'
 import logo from './logo.png'
 
-const MAX_NUM_COLORS = 7
+const MAX_NUM_COLORS = 8
 const MIN_NUM_COLORS = 2
 
 const hexPairToNumber = (hexPair) => {
@@ -199,7 +200,7 @@ class App extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
+    this.state = this._parseQueryStringIntoValues({
       colors: [
         '#FFC887',
         '#CEFB74',
@@ -218,11 +219,66 @@ class App extends Component {
       ratioUpFirst: 0.5,
       seed: 1,
       width: 1000,
-      xVariance: 0.1,
       startVariance: 0.5,
+      xVariance: 0.1,
       yVariance: 0.5,
       nightModeOn: false,
+    }, location.search)
+  }
+
+  _parseQueryStringIntoValues = (values, query) => {
+    const bound = (min, max, value) => Math.min(max, Math.max(min, value))
+    const q = qs.parse(query.replace('?', ''))
+
+    try {
+      if (q.cs) {
+        let colors = q.cs.split(',').map(color => {
+          if (color.length === 3) { color += color }
+          if (color.length !== 6) { throw new Error('Invalid color') }
+          return `#${color}`
+        })
+        if (colors.length === 1) {
+          colors = colors.concat(colors)
+        }
+        values.colors = colors
+      }
+      if (q.ds) { values.dashSize = bound(1, 50, Number(q.ds)) }
+      if (q.dss) { values.dashSpaceSize = bound(0, 50, Number(q.dss)) }
+      if (q.h) { values.height = bound(1, 2000, Number(q.h)) }
+      if (q.lw) { values.lineWidth = bound(1, 100, Number(q.lw)) }
+      if (q.nl) { values.numLines = Math.min(300, Number(q.nl)) }
+      if (q.ruf) { values.ratioUpFirst = bound(0, 1, Number(q.ruf)) }
+      if (q.s) { values.seed = Number(q.s) }
+      if (q.w) { values.width = bound(0, 5000, Number(q.w)) }
+      if (q.sv) { values.startVariance = bound(0, 1, Number(q.sv)) }
+      if (q.xv) { values.xVariance = bound(0, 1, Number(q.xv)) }
+      if (q.yv) { values.yVariance = bound(0, 1, Number(q.yv)) }
+      if (query.indexOf('nightMode') > -1) { values.nightModeOn = true }
+    } catch(err) {
+      console.log('There was an error parsing the query params. Using defaults.')
     }
+
+    return values
+  }
+
+  _generateQueryString = () => {
+    let str = ''
+
+    str += `&cs=${this.state.colors.map(
+      color => color.replace('#', '')).join(',')}`
+    str += `&ds=${this.state.dashSize}`
+    str += `&ds=${this.state.dashSpaceSize}`
+    str += `&h=${this.state.height}`
+    str += `&lw=${this.state.lineWidth}`
+    str += `&nl=${this.state.numLines}`
+    str += `&ru=${this.state.ratioUpFirst}`
+    str += `&s=${this.state.seed}`
+    str += `&w=${this.state.width}`
+    str += `&sv=${this.state.startVariance}`
+    str += `&xv=${this.state.xVariance}`
+    str += `&yv=${this.state.yVariance}`
+
+    return str
   }
 
   valueUpdater = (key) => {
@@ -409,6 +465,12 @@ class App extends Component {
                   max="15"
                   onChange={(e) => this.valueUpdater('lineWidth')(e.target.value)}
               />
+            </div>
+            <div className="canvas-control">
+              <span className="noselect">Share your settings</span>
+              <div className="share-holder">
+                https://ripleyaffect.github.io/rainbow-bezier/?{this._generateQueryString()}
+              </div>
             </div>
             <div className="canvas-control">
               Night mode

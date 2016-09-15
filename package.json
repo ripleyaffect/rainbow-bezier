@@ -6,6 +6,7 @@
     "react-scripts": "0.4.1"
   },
   "dependencies": {
+    "qs": "^6.2.1",
     "rainbowvis.js": "^1.0.1",
     "react": "^15.3.1",
     "react-addons-test-utils": "^15.3.1",
