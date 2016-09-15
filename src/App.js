@@ -118,8 +118,6 @@ class BezierRainbow extends Component {
       colors,
     } = this.props
 
-    console.log(seed)
-
     const entropyScalar = 791
     const entropy = Math.floor(seedrandom(seed)() * entropyScalar)
     const ctx = this.canvas.getContext('2d')
@@ -481,6 +479,7 @@ class App extends Component {
                     value={nightModeOn}
                     type="checkbox"
                     name="night-mode"
+                    checked={nightModeOn}
                     onChange={(e) => this.valueUpdater('nightModeOn')(!nightModeOn)}
                 />
               </span>
