@@ -24,12 +24,7 @@
   margin-right: auto;
   margin-left: auto;
   margin-top: 30px;
-}
-
-.controls-header {
-  color: #fff;
-  font-size: 18px;
-  margin-top: 20px;
+  margin-bottom: 15px;
 }
 
 input[type="range"] {

@@ -311,6 +311,7 @@ class App extends Component {
     const { colors } = this.state
     this.setState({
       colors: colors.concat(colors[colors.length - 1]),
+      colorEditingIndex: colors.length
     })
   }
 
@@ -340,7 +341,6 @@ class App extends Component {
         <div className="controls-container">
           <div className="controls">
             <img className="logo" src={logo} alt="logo" />
-            <h4 className="controls-header">Controls</h4>
             <div className="canvas-control">
               Height <span className="control-value">{height}px</span>
               <input
@@ -386,7 +386,7 @@ class App extends Component {
               />
             </div>
             <div className="canvas-control">
-              Start &amp; end variance <span className="control-value">{startVariance * 100}%</span>
+              Start &amp; end variance <span className="control-value">{Math.floor(startVariance * 100)}%</span>
               <input
                   value={startVariance}
                   type="range"
@@ -398,7 +398,7 @@ class App extends Component {
               />
             </div>
             <div className="canvas-control">
-              X Variance <span className="control-value">{xVariance * 100}%</span>
+              X Variance <span className="control-value">{Math.floor(xVariance * 100)}%</span>
               <input
                   value={xVariance}
                   type="range"
@@ -410,7 +410,7 @@ class App extends Component {
               />
             </div>
             <div className="canvas-control">
-              Y Variance <span className="control-value">{yVariance * 100}%</span>
+              Y Variance <span className="control-value">{Math.floor(yVariance * 100)}%</span>
               <input
                   value={yVariance}
                   type="range"
@@ -422,7 +422,7 @@ class App extends Component {
               />
             </div>
             <div className="canvas-control">
-              Ratio curving up first <span className="control-value">{ratioUpFirst * 100}%</span>
+              Ratio curving up first <span className="control-value">{Math.floor(ratioUpFirst * 100)}%</span>
               <input
                   value={ratioUpFirst}
                   type="range"
