@@ -118,6 +118,8 @@ class BezierRainbow extends Component {
       colors,
     } = this.props
 
+    console.log(seed)
+
     const entropyScalar = 791
     const entropy = Math.floor(seedrandom(seed)() * entropyScalar)
     const ctx = this.canvas.getContext('2d')
@@ -264,10 +266,10 @@ class App extends Component {
   _generateQueryString = () => {
     let str = ''
 
-    str += `&cs=${this.state.colors.map(
+    str += `cs=${this.state.colors.map(
       color => color.replace('#', '')).join(',')}`
     str += `&ds=${this.state.dashSize}`
-    str += `&ds=${this.state.dashSpaceSize}`
+    str += `&dss=${this.state.dashSpaceSize}`
     str += `&h=${this.state.height}`
     str += `&lw=${this.state.lineWidth}`
     str += `&nl=${this.state.numLines}`
@@ -289,7 +291,6 @@ class App extends Component {
 
   colorUpdater = (index) => {
     return (color) => {
-      console.log(color)
       this.setState({
         colors: this.state.colors.map(
           (c, i) => index === i ? color.hex.hex || color.hex : c)
@@ -489,17 +490,17 @@ class App extends Component {
         <div className={`canvas-container${nightModeOn ? ' canvas-container__dark' : ''}`}>
           <BezierRainbow
               colors={colors}
-              dashSize={dashSize}
-              dashSpaceSize={dashSpaceSize}
-              height={height}
-              lineWidth={lineWidth}
-              numLines={numLines}
+              dashSize={Number(dashSize)}
+              dashSpaceSize={Number(dashSpaceSize)}
+              height={Number(height)}
+              lineWidth={Number(lineWidth)}
+              numLines={Number(numLines)}
               ratioUpFirst={Number(ratioUpFirst)}
-              seed={seed}
-              width={width}
-              xVariance={xVariance}
-              startVariance={startVariance}
-              yVariance={yVariance}
+              seed={Number(seed)}
+              width={Number(width)}
+              xVariance={Number(xVariance)}
+              startVariance={Number(startVariance)}
+              yVariance={Number(yVariance)}
           />
           <div className="color-swatches">
             {colors.map((color, idx) => {
