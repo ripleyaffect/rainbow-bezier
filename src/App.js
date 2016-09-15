@@ -306,7 +306,7 @@ class App extends Component {
               />
             </div>
             <div className="canvas-control">
-              Start &amp; end variance <span className="control-value">{ratioUpFirst * 100}%</span>
+              Start &amp; end variance <span className="control-value">{startVariance * 100}%</span>
               <input
                   value={startVariance}
                   type="range"
@@ -416,24 +416,25 @@ class App extends Component {
               yVariance={yVariance}
           />
           <div className="color-swatches">
-            {colors.map((color, idx) =>
-              <div className="color-swatch-group" key={idx}>
+            {colors.map((color, idx) => {
+              const editing = colorEditingIndex === idx
+              return <div className="color-swatch-group" key={idx}>
                 <div
-                    className="color-swatch"
+                    className={
+                      `color-swatch${editing ? ' color-swatch__editing' : ''}`}
                     onClick={
                       () => this.valueUpdater('colorEditingIndex')(
-                        colorEditingIndex === idx ? null : idx)
-                    }
+                        editing ? null : idx)}
                     style={{ backgroundColor: color }}
                 />
-                {colorEditingIndex === idx &&
+                {editing &&
                   <div className="color-swatch-picker">
                     <CompactPicker
                         color={color}
                         onChange={this.colorUpdater(idx)} />
                   </div>}
               </div>
-            )}
+            })}
           </div>
         </div>
       </div>

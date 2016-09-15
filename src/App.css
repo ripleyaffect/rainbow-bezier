@@ -90,6 +90,11 @@ input[type="checkbox"] {
 .color-swatch {
   height: 60px;
   width: 60px;
+  cursor: pointer;
+}
+
+.color-swatch__editing {
+  height: 65px;
 }
 
 .color-swatch-picker {
