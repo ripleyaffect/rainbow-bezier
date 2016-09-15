@@ -1,7 +1,7 @@
 import qs from 'qs'
 import Rainbow from 'rainbowvis.js'
 import React, { Component } from 'react'
-import { CompactPicker } from 'react-color';
+import { SketchPicker } from 'react-color';
 import seedrandom from 'seedrandom'
 
 import './App.css'
@@ -522,7 +522,7 @@ class App extends Component {
                   </div>}
                 {editing &&
                   <div className="color-swatch-picker">
-                    <CompactPicker
+                    <SketchPicker
                         color={color}
                         onChange={this.colorUpdater(idx)} />
                   </div>}

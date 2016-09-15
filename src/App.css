@@ -94,7 +94,7 @@ input[type="checkbox"] {
 
 .color-swatch-picker {
   position: absolute;
-  top: -88px;
+  top: -299px;
   left: 0;
 }
 
@@ -102,7 +102,7 @@ input[type="checkbox"] {
   position: absolute;
   font-size: 14px;
   width: 90px;
-  top: -115px;
+  top: -325px;
   border-radius: 2px;
   padding: 5px;
   background-color: #FFAAA2;
