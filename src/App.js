@@ -37,6 +37,7 @@ class BezierRainbow extends Component {
     height: 500,
     ratioUpFirst: 0.5,
     seed: 1,
+    discreteColors: false,
     width: 1000,
     xVariance: 0.1,
     startVariance: 0.5,
@@ -110,6 +111,7 @@ class BezierRainbow extends Component {
     const {
       dashSize,
       dashSpaceSize,
+      discreteColors,
       height,
       lineWidth,
       numLines,
@@ -123,8 +125,9 @@ class BezierRainbow extends Component {
     const ctx = this.canvas.getContext('2d')
 
     // Set up the color spectrum
+    const spectrumValues = discreteColors ? colors.length : numLines
     const spectrum = new Rainbow()
-    spectrum.setNumberRange(0, numLines)
+    spectrum.setNumberRange(1, spectrumValues)
     spectrum.setSpectrum(...colors)
 
     // Clear the canvas
@@ -166,7 +169,8 @@ class BezierRainbow extends Component {
       ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
 
       // Set the color
-      const hexColor = spectrum.colourAt(Math.floor(seedrandom(seed + i)() * numLines))
+      const colorIndex = Math.floor(seedrandom(seed + i)() * spectrumValues + 1)
+      const hexColor = spectrum.colourAt(colorIndex)
       const red = hexPairToNumber(hexColor.slice(0, 2))
       const green = hexPairToNumber(hexColor.slice(2, 4))
       const blue = hexPairToNumber(hexColor.slice(4, 6))
@@ -213,6 +217,7 @@ class App extends Component {
       colorEditingIndex: null,
       dashSize: 1,
       dashSpaceSize: 0,
+      discreteColors: false,
       height: 500,
       lineWidth: 3,
       numLines: 30,
@@ -253,6 +258,7 @@ class App extends Component {
       if (q.sv) { values.startVariance = bound(0, 1, Number(q.sv)) }
       if (q.xv) { values.xVariance = bound(0, 1, Number(q.xv)) }
       if (q.yv) { values.yVariance = bound(0, 1, Number(q.yv)) }
+      if (query.indexOf('discreteColors') > -1) { values.discreteColors = true }
       if (query.indexOf('nightMode') > -1) { values.nightModeOn = true }
     } catch(err) {
       console.log('There was an error parsing the query params. Using defaults.')
@@ -264,8 +270,11 @@ class App extends Component {
   _generateQueryString = () => {
     let str = ''
 
+    // Add colors
     str += `cs=${this.state.colors.map(
       color => color.replace('#', '')).join(',')}`
+
+    // Add settings
     str += `&ds=${this.state.dashSize}`
     str += `&dss=${this.state.dashSpaceSize}`
     str += `&h=${this.state.height}`
@@ -277,6 +286,10 @@ class App extends Component {
     str += `&sv=${this.state.startVariance}`
     str += `&xv=${this.state.xVariance}`
     str += `&yv=${this.state.yVariance}`
+
+    // Add flags
+    if (this.state.discreteColors) { str += '&discreteColors' }
+    if (this.state.nightMode) { str += '&nightMode' }
 
     return str
   }
@@ -320,6 +333,7 @@ class App extends Component {
       colorEditingIndex,
       dashSize,
       dashSpaceSize,
+      discreteColors,
       height,
       lineWidth,
       nightModeOn,
@@ -466,6 +480,19 @@ class App extends Component {
               />
             </div>
             <div className="canvas-control">
+              Use discrete colors
+              <span className="control-value">
+                {discreteColors ? 'on' : 'off'}
+                <input
+                    value={discreteColors}
+                    type="checkbox"
+                    name="night-mode"
+                    checked={discreteColors}
+                    onChange={(e) => this.valueUpdater('discreteColors')(!discreteColors)}
+                />
+              </span>
+            </div>
+            <div className="canvas-control">
               <span className="noselect">Share your settings</span>
               <div className="share-holder">
                 https://ripleyaffect.github.io/rainbow-bezier/?{this._generateQueryString()}
@@ -491,6 +518,7 @@ class App extends Component {
               colors={colors}
               dashSize={Number(dashSize)}
               dashSpaceSize={Number(dashSpaceSize)}
+              discreteColors={discreteColors}
               height={Number(height)}
               lineWidth={Number(lineWidth)}
               numLines={Number(numLines)}
