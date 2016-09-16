@@ -1,7 +1,7 @@
 import qs from 'qs'
 import Rainbow from 'rainbowvis.js'
 import React, { Component } from 'react'
-import { SketchPicker } from 'react-color';
+import { SketchPicker } from 'react-color'
 import seedrandom from 'seedrandom'
 
 import './App.css'
@@ -21,6 +21,7 @@ const hexPairToNumber = (hexPair) => {
 
 class BezierRainbow extends Component {
   static defaultProps = {
+    backgroundColor: '#FFFFFF',
     colors: [
       '#FFC887',
       '#CEFB74',
@@ -109,6 +110,7 @@ class BezierRainbow extends Component {
 
   setLines = () => {
     const {
+      backgroundColor,
       dashSize,
       dashSpaceSize,
       discreteColors,
@@ -130,8 +132,9 @@ class BezierRainbow extends Component {
     spectrum.setNumberRange(1, spectrumValues)
     spectrum.setSpectrum(...colors)
 
-    // Clear the canvas
-    ctx.clearRect(0, 0, width, height)
+    // Draw the background
+    ctx.fillStyle=backgroundColor
+    ctx.fillRect(0, 0, width, height)
 
     // Set the line properties
     ctx.setLineDash([dashSize, dashSpaceSize])
@@ -205,6 +208,7 @@ class App extends Component {
     super(props)
 
     this.state = this._parseQueryStringIntoValues({
+      backgroundColor: '#FFFFFF',
       colors: [
         '#FFC887',
         '#CEFB74',
@@ -227,7 +231,6 @@ class App extends Component {
       startVariance: 0.5,
       xVariance: 0.1,
       yVariance: 0.5,
-      nightModeOn: false,
     }, location.search)
   }
 
@@ -236,6 +239,14 @@ class App extends Component {
     const q = qs.parse(query.replace('?', ''))
 
     try {
+      if (q.bg) {
+        let backgroundColor = q.bg
+        if (backgroundColor.length === 3) { backgroundColor += backgroundColor }
+        if (backgroundColor.length !== 6) { throw new Error('Invalid background color') }
+        backgroundColor = `#${backgroundColor}`
+        values.backgroundColor = backgroundColor
+      }
+
       if (q.cs) {
         let colors = q.cs.split(',').map(color => {
           if (color.length === 3) { color += color }
@@ -259,7 +270,6 @@ class App extends Component {
       if (q.xv) { values.xVariance = bound(0, 1, Number(q.xv)) }
       if (q.yv) { values.yVariance = bound(0, 1, Number(q.yv)) }
       if (query.indexOf('discreteColors') > -1) { values.discreteColors = true }
-      if (query.indexOf('nightMode') > -1) { values.nightModeOn = true }
     } catch(err) {
       console.log('There was an error parsing the query params. Using defaults.')
     }
@@ -271,7 +281,8 @@ class App extends Component {
     let str = ''
 
     // Add colors
-    str += `cs=${this.state.colors.map(
+    str += `bg=${this.state.backgroundColor.replace('#', '')}`
+    str += `&cs=${this.state.colors.map(
       color => color.replace('#', '')).join(',')}`
 
     // Add settings
@@ -289,7 +300,6 @@ class App extends Component {
 
     // Add flags
     if (this.state.discreteColors) { str += '&discreteColors' }
-    if (this.state.nightMode) { str += '&nightMode' }
 
     return str
   }
@@ -304,7 +314,7 @@ class App extends Component {
     return (color) => {
       this.setState({
         colors: this.state.colors.map(
-          (c, i) => index === i ? color.hex.hex || color.hex : c)
+          (c, i) => index === i ? color.hex : c)
       })
     }
   }
@@ -329,6 +339,7 @@ class App extends Component {
 
   render() {
     const {
+      backgroundColor,
       colors,
       colorEditingIndex,
       dashSize,
@@ -336,7 +347,6 @@ class App extends Component {
       discreteColors,
       height,
       lineWidth,
-      nightModeOn,
       numLines,
       ratioUpFirst,
       seed,
@@ -348,6 +358,7 @@ class App extends Component {
 
     const canAddColor = colors.length < MAX_NUM_COLORS
     const canRemoveColor = colors.length > MIN_NUM_COLORS
+    const editingBackground = colorEditingIndex === 'bg'
 
     return (
       <div className="App">
@@ -486,7 +497,7 @@ class App extends Component {
                 <input
                     value={discreteColors}
                     type="checkbox"
-                    name="night-mode"
+                    name="discrete-colors"
                     checked={discreteColors}
                     onChange={(e) => this.valueUpdater('discreteColors')(!discreteColors)}
                 />
@@ -498,23 +509,13 @@ class App extends Component {
                 https://ripleyaffect.github.io/rainbow-bezier/?{this._generateQueryString()}
               </div>
             </div>
-            <div className="canvas-control">
-              Night mode
-              <span className="control-value">
-                {nightModeOn ? 'on' : 'off'}
-                <input
-                    value={nightModeOn}
-                    type="checkbox"
-                    name="night-mode"
-                    checked={nightModeOn}
-                    onChange={(e) => this.valueUpdater('nightModeOn')(!nightModeOn)}
-                />
-              </span>
-            </div>
           </div>
         </div>
-        <div className={`canvas-container${nightModeOn ? ' canvas-container__dark' : ''}`}>
+        <div
+            className="canvas-container"
+            style={{ backgroundColor }}>
           <BezierRainbow
+              backgroundColor={backgroundColor}
               colors={colors}
               dashSize={Number(dashSize)}
               dashSpaceSize={Number(dashSpaceSize)}
@@ -529,7 +530,28 @@ class App extends Component {
               startVariance={Number(startVariance)}
               yVariance={Number(yVariance)}
           />
-          <div className="color-swatches">
+          <div className={`color-swatches${
+            colorEditingIndex !== null || editingBackground ?
+              ' color-swatches__editing' : ''}`}>
+            <div className="color-swatch-group">
+              <div
+                  className={
+                    `color-swatch background-color-swatch${
+                      editingBackground ? ' color-swatch__editing' : ''}`}
+                  onClick={() =>
+                    this.valueUpdater('colorEditingIndex')(
+                      editingBackground ? null : 'bg')}
+                  style={{ backgroundColor: backgroundColor }}
+              />
+              {editingBackground &&
+                <div className="color-swatch-picker">
+                  <SketchPicker
+                      color={backgroundColor}
+                      onChange={(color) =>
+                        this.valueUpdater('backgroundColor')(color.hex)}
+                  />
+                </div>}
+            </div>
             {colors.map((color, idx) => {
               const editing = colorEditingIndex === idx
               return <div className="color-swatch-group" key={idx}>

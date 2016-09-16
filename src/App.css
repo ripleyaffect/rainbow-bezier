@@ -54,9 +54,8 @@ input[type="checkbox"] {
   display: inline-block;
   position: relative;
   height: 100vh;
-  width: calc(100% - 230px);
+  width: calc(100% - 225px);
   overflow: scroll;
-  border-left: 1px #333 solid;
 }
 
 .canvas-container__dark {
@@ -72,9 +71,16 @@ input[type="checkbox"] {
 }
 
 .color-swatches {
+  background-color: #333;
   position: absolute;
   bottom: 0;
   left: 0;
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
+.color-swatches__editing {
+  padding-top: 5px;
 }
 
 .color-swatch-group {
@@ -82,10 +88,16 @@ input[type="checkbox"] {
   position: relative;
 }
 
+
 .color-swatch {
   height: 60px;
   width: 60px;
   cursor: pointer;
+}
+
+.background-color-swatch {
+  width: 120px;
+  margin-right: 10px;
 }
 
 .color-swatch__editing {
