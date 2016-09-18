@@ -1,5 +1,6 @@
-const express = require('express')
 const Canvas = require('canvas')
+const express = require('express')
+const qs = require('qs')
 
 const drawLines = require('./shared/drawLines')
 const parseQueryParams = require('./shared/parseQueryParams')
@@ -12,8 +13,9 @@ app.use('/static', express.static(`${__dirname}/public`))
 app.set('view engine', 'pug');
 
 app.get('/', (req, res) => {
-  ogUrl = "http://rainbow-bezier.herokuapp.com"
-  ogImageUrl = `${ogUrl}/image?lw=10`
+  const ogUrl = "http://rainbow-bezier.herokuapp.com"
+  const queryString = qs.stringify(req.query)
+  const ogImageUrl = `${ogUrl}/image${queryString ? `?${queryString}` : ''}`
   res.render(`index`, {
     ogUrl,
     ogImageUrl,
