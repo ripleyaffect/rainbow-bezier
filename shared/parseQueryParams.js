@@ -1,29 +1,4 @@
-const getDefaultValues = () => {
-  return {
-    backgroundColor: '#FFFFFF',
-    colors: [
-      '#FFC887',
-      '#CEFB74',
-      '#82FBB6',
-      '#7CC7FF',
-      '#C17DFF',
-      '#FF7FD8',
-      '#FFC18C',
-    ],
-    dashSize: 1,
-    dashSpaceSize: 0,
-    lineWidth: 1,
-    numLines: 10,
-    height: 500,
-    ratioUpFirst: 0.5,
-    seed: 1,
-    discreteColors: false,
-    width: 1000,
-    xVariance: 0.1,
-    startVariance: 0.5,
-    yVariance: 0.5,
-  }
-}
+const getDefaultValues = require('./getDefaultValues')
 
 module.exports = (q) => {
   let values = getDefaultValues()

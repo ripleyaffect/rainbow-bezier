@@ -6,35 +6,13 @@ import CopyToClipboard from 'react-copy-to-clipboard'
 
 import drawLines from './drawLines'
 import logo from './logo.png'
+import getDefaultValues from './getDefaultValues'
 
 const MAX_NUM_COLORS = 8
 const MIN_NUM_COLORS = 2
 
 class BezierRainbow extends Component {
-  static defaultProps = {
-    backgroundColor: '#FFFFFF',
-    colors: [
-      '#FFC887',
-      '#CEFB74',
-      '#82FBB6',
-      '#7CC7FF',
-      '#C17DFF',
-      '#FF7FD8',
-      '#FFC18C',
-    ],
-    dashSize: 1,
-    dashSpaceSize: 0,
-    lineWidth: 1,
-    numLines: 10,
-    height: 500,
-    ratioUpFirst: 0.5,
-    seed: 1,
-    discreteColors: false,
-    width: 1000,
-    xVariance: 0.1,
-    startVariance: 0.5,
-    yVariance: 0.5,
-  }
+  static defaultProps = getDefaultValues()
 
   drawLines = () => {
     const ctx = this.canvas.getContext('2d')
@@ -120,30 +98,9 @@ class App extends Component {
     super(props)
 
     this.state = this._parseQueryStringIntoValues({
-      backgroundColor: '#FFFFFF',
-      colors: [
-        '#FFC887',
-        '#CEFB74',
-        '#82FBB6',
-        '#7CC7FF',
-        '#C17DFF',
-        '#FF7FD8',
-        '#FFC18C',
-      ],
+      ...getDefaultValues(),
       colorEditingIndex: null,
-      dashSize: 1,
-      dashSpaceSize: 0,
-      discreteColors: false,
-      height: 500,
-      lineWidth: 3,
-      numLines: 30,
-      ratioUpFirst: 0.5,
-      seed: 1,
       showCopiedMessage: false,
-      width: 1000,
-      startVariance: 0.5,
-      xVariance: 0.1,
-      yVariance: 0.5,
     }, location.search)
   }
 
