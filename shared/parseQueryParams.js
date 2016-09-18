@@ -36,9 +36,9 @@ module.exports = (q) => {
     if (q.xv) { values.xVariance = bound(0, 1, Number(q.xv)) }
     if (q.yv) { values.yVariance = bound(0, 1, Number(q.yv)) }
     if (q.discreteColors) { values.discreteColors = true }
+    if (q.showPoints) { values.showPoints = true }
   } catch(err) {
     console.log('There was an error parsing the query params. Using defaults.')
-    console.log(err)
   }
 
   return values

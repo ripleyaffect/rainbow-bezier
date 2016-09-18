@@ -162,6 +162,14 @@ input[type="checkbox"] {
   background-color: #555;
 }
 
+a {
+  color: #7CC7FF;
+  text-decoration: none;
+}
+a:hover {
+  color: #8CD7FF;
+}
+
 .copy-button {
   color: #7CC7FF;
   cursor: pointer;

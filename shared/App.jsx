@@ -7,6 +7,7 @@ import CopyToClipboard from 'react-copy-to-clipboard'
 import drawLines from './drawLines'
 import logo from './logo.png'
 import getDefaultValues from './getDefaultValues'
+import parseQueryParams from './parseQueryParams'
 
 const MAX_NUM_COLORS = 8
 const MIN_NUM_COLORS = 2
@@ -100,51 +101,14 @@ class App extends Component {
     this.state = this._parseQueryStringIntoValues({
       ...getDefaultValues(),
       colorEditingIndex: null,
-      showCopiedMessage: false,
+      showShareCopiedMessage: false,
+      showImageCopiedMessage: false,
     }, location.search)
   }
 
   _parseQueryStringIntoValues = (values, query) => {
-    const bound = (min, max, value) => Math.min(max, Math.max(min, value))
     const q = qs.parse(query.replace('?', ''))
-
-    try {
-      if (q.bg) {
-        let backgroundColor = q.bg
-        if (backgroundColor.length === 3) { backgroundColor += backgroundColor }
-        if (backgroundColor.length !== 6) { throw new Error('Invalid background color') }
-        backgroundColor = `#${backgroundColor}`
-        values.backgroundColor = backgroundColor
-      }
-
-      if (q.cs) {
-        let colors = q.cs.split(',').map(color => {
-          if (color.length === 3) { color += color }
-          if (color.length !== 6) { throw new Error('Invalid color') }
-          return `#${color}`
-        })
-        if (colors.length === 1) {
-          colors = colors.concat(colors)
-        }
-        values.colors = colors
-      }
-      if (q.ds) { values.dashSize = bound(1, 50, Number(q.ds)) }
-      if (q.dss) { values.dashSpaceSize = bound(0, 50, Number(q.dss)) }
-      if (q.h) { values.height = bound(1, 2000, Number(q.h)) }
-      if (q.lw) { values.lineWidth = bound(1, 100, Number(q.lw)) }
-      if (q.nl) { values.numLines = Math.min(300, Number(q.nl)) }
-      if (q.ruf) { values.ratioUpFirst = bound(0, 1, Number(q.ruf)) }
-      if (q.s) { values.seed = Number(q.s) }
-      if (q.w) { values.width = bound(0, 5000, Number(q.w)) }
-      if (q.sv) { values.startVariance = bound(0, 1, Number(q.sv)) }
-      if (q.xv) { values.xVariance = bound(0, 1, Number(q.xv)) }
-      if (q.yv) { values.yVariance = bound(0, 1, Number(q.yv)) }
-      if (query.indexOf('discreteColors') > -1) { values.discreteColors = true }
-    } catch(err) {
-      console.log('There was an error parsing the query params. Using defaults.')
-    }
-
-    return values
+    return parseQueryParams(q)
   }
 
   _generateQueryString = () => {
@@ -161,15 +125,17 @@ class App extends Component {
     str += `&h=${this.state.height}`
     str += `&lw=${this.state.lineWidth}`
     str += `&nl=${this.state.numLines}`
+    str += `&o=${this.state.opacity}`
     str += `&ru=${this.state.ratioUpFirst}`
     str += `&s=${this.state.seed}`
-    str += `&w=${this.state.width}`
     str += `&sv=${this.state.startVariance}`
+    str += `&w=${this.state.width}`
     str += `&xv=${this.state.xVariance}`
     str += `&yv=${this.state.yVariance}`
 
     // Add flags
-    if (this.state.discreteColors) { str += '&discreteColors' }
+    if (this.state.discreteColors) { str += '&discreteColors=1' }
+    if (this.state.showPoints) { str += '&showPoints=1' }
 
     return str
   }
@@ -207,9 +173,15 @@ class App extends Component {
     })
   }
 
-  handleCopied = () => {
-    this.setState({ showCopiedMessage: true }, () => {
-      setTimeout(() => this.setState({ showCopiedMessage: false }), 1000)
+  handleShareCopied = () => {
+    this.setState({ showShareCopiedMessage: true }, () => {
+      setTimeout(() => this.setState({ showShareCopiedMessage: false }), 1000)
+    })
+  }
+
+  handleImageCopied = () => {
+    this.setState({ showImageCopiedMessage: true }, () => {
+      setTimeout(() => this.setState({ showImageCopiedMessage: false }), 1000)
     })
   }
 
@@ -224,9 +196,12 @@ class App extends Component {
       height,
       lineWidth,
       numLines,
+      opacity,
       ratioUpFirst,
       seed,
-      showCopiedMessage,
+      showShareCopiedMessage,
+      showImageCopiedMessage,
+      showPoints,
       width,
       xVariance,
       startVariance,
@@ -236,8 +211,11 @@ class App extends Component {
     const canAddColor = colors.length < MAX_NUM_COLORS
     const canRemoveColor = colors.length > MIN_NUM_COLORS
     const editingBackground = colorEditingIndex === 'bg'
-    const shareUrl = `http://rainbow-bezier.herokuapp.com/?${
-      this._generateQueryString()}`
+
+    const urlBase = 'http://rainbow-bezier.herokuapp.com'
+    const queryString = this._generateQueryString()
+    const shareUrl = `${urlBase}/?${queryString}`
+    const imageUrl = `${urlBase}/image?${queryString}`
 
     return (
       <div className="App">
@@ -370,6 +348,18 @@ class App extends Component {
               />
             </div>
             <div className="canvas-control">
+              Opacity <span className="control-value">{Math.floor(opacity * 100)}%</span>
+              <input
+                  value={opacity}
+                  type="range"
+                  name="line-width"
+                  min="0.1"
+                  max="1"
+                  step="0.1"
+                  onChange={(e) => this.valueUpdater('opacity')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
               Use discrete colors
               <span className="control-value">
                 {discreteColors ? 'on' : 'off'}
@@ -383,13 +373,35 @@ class App extends Component {
               </span>
             </div>
             <div className="canvas-control">
+              Show control points
+              <span className="control-value">
+                {showPoints ? 'on' : 'off'}
+                <input
+                    value={showPoints}
+                    type="checkbox"
+                    name="show-points"
+                    checked={showPoints}
+                    onChange={(e) => this.valueUpdater('showPoints')(!showPoints)}
+                />
+              </span>
+            </div>
+            <div className="canvas-control">
               <span className="noselect">Share your settings</span>
-              {showCopiedMessage ?
+              {showShareCopiedMessage ?
                 <span className="control-value">Copied!</span>
-              : <CopyToClipboard text={shareUrl} onCopy={this.handleCopied}>
+              : <CopyToClipboard text={shareUrl} onCopy={this.handleShareCopied}>
                   <span className="control-value copy-button">Copy</span>
                 </CopyToClipboard>}
-              <div className="share-holder">{shareUrl}</div>
+              <a href={shareUrl} target="_blank" className="share-holder">{shareUrl}</a>
+            </div>
+            <div className="canvas-control">
+              <span className="noselect">Image link</span>
+              {showImageCopiedMessage ?
+                <span className="control-value">Copied!</span>
+              : <CopyToClipboard text={imageUrl} onCopy={this.handleImageCopied}>
+                  <span className="control-value copy-button">Copy</span>
+                </CopyToClipboard>}
+              <a href={imageUrl} target="_blank" className="share-holder">{imageUrl}</a>
             </div>
           </div>
         </div>
@@ -403,8 +415,10 @@ class App extends Component {
               height={Number(height)}
               lineWidth={Number(lineWidth)}
               numLines={Number(numLines)}
+              opacity={Number(opacity)}
               ratioUpFirst={Number(ratioUpFirst)}
               seed={Number(seed)}
+              showPoints={showPoints}
               width={Number(width)}
               xVariance={Number(xVariance)}
               startVariance={Number(startVariance)}
