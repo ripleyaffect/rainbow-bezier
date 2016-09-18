@@ -1,5 +1,5 @@
-import Rainbow from 'rainbowvis.js'
-import seedrandom from 'seedrandom'
+const Rainbow = require('rainbowvis.js')
+const seedrandom = require('seedrandom')
 
 const hexPairToNumber = (hexPair) => {
   hexPair = hexPair.toUpperCase()
@@ -65,7 +65,7 @@ const _getCP2Y = (seed, height, yVariance, upFirst, endY, entropy) => {
   return Math.max(0, Math.min(height, val))
 }
 
-export default (
+module.exports = (
   ctx,
   {
     backgroundColor,
