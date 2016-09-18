@@ -76,12 +76,14 @@ module.exports = (
     height,
     lineWidth,
     numLines,
+    opacity,
     ratioUpFirst,
     seed,
     startVariance,
     width,
     xVariance,
     yVariance,
+    showPoints,
   }
 ) => {
   const entropyScalar = 791
@@ -104,8 +106,6 @@ module.exports = (
 
   // Draw the lines
   for (let i=0; i < numLines; i++) {
-    ctx.beginPath()
-
     // Give y values a buffer
     const minPointY = _getMinY(height, startVariance)
     const maxPointY = height - minPointY
@@ -129,17 +129,37 @@ module.exports = (
     const cp2X = _getCP2X(seed, width, xVariance, i * entropy * 5)
     const cp2Y = _getCP2Y(seed, height, yVariance, upFirst, endY, i * entropy * 9)
 
-    // Make the curve
-    ctx.moveTo(startX, startY)
-    ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
-
     // Set the color
     const colorIndex = Math.floor(seedrandom(seed + i)() * spectrumValues + 1)
     const hexColor = spectrum.colourAt(colorIndex)
     const red = hexPairToNumber(hexColor.slice(0, 2))
     const green = hexPairToNumber(hexColor.slice(2, 4))
     const blue = hexPairToNumber(hexColor.slice(4, 6))
-    ctx.strokeStyle = `rgb(${red}, ${green}, ${blue})`
+    const colorString = `rgba(${red}, ${green}, ${blue}, ${opacity})`
+
+    // draw the points if needed
+    if (showPoints) {
+      ctx.fillStyle = colorString
+      ctx.beginPath()
+      ctx.arc(startX, startY, 5, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.beginPath()
+      ctx.arc(cp1X, cp1Y, 5, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.beginPath()
+      ctx.arc(cp2X, cp2Y, 5, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.beginPath()
+      ctx.arc(endX, endY, 5, 0, 2 * Math.PI, false);
+      ctx.fill();
+    }
+
+    // Make the curve
+    ctx.beginPath()
+    ctx.moveTo(startX, startY)
+    ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
+    ctx.strokeStyle = colorString
     ctx.stroke()
+
   }
 }
