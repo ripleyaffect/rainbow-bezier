@@ -1,25 +1,14 @@
 import qs from 'qs'
-import Rainbow from 'rainbowvis.js'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { SketchPicker } from 'react-color'
-import seedrandom from 'seedrandom'
 import CopyToClipboard from 'react-copy-to-clipboard'
 
-
+import drawLines from './drawLines'
 import logo from './logo.png'
 
 const MAX_NUM_COLORS = 8
 const MIN_NUM_COLORS = 2
-
-const hexPairToNumber = (hexPair) => {
-  hexPair = hexPair.toUpperCase()
-  if (hexPair.length === 1) {
-    hexPair += hexPair
-  }
-  const hexMap = '0123456789ABCDEF'
-  return hexMap.indexOf(hexPair[0]) * 16 + hexMap.indexOf(hexPair[1])
-}
 
 class BezierRainbow extends Component {
   static defaultProps = {
@@ -47,150 +36,17 @@ class BezierRainbow extends Component {
     yVariance: 0.5,
   }
 
-  _getMinY = () => {
-    const { height, startVariance } = this.props
-    return Math.floor(height / 2 + startVariance * height / 2)
-  }
-
-  _getUpFirst = (entropy) => {
-    const { seed, ratioUpFirst } = this.props
-
-    return Math.floor(seedrandom(seed + entropy)() + ratioUpFirst)
-  }
-
-  _getStartX = () => {
-    return 0
-  }
-
-  _getStartY = (min, max, entropy) => {
-    const { seed } = this.props
-    return Math.floor(seedrandom(seed + entropy)() * (max - min) + min)
-  }
-
-  _getEndX = () => {
-    return this.props.width
-  }
-
-  _getEndY = (min, max, startY, entropy) => {
-    const { seed } = this.props
-    return Math.floor(seedrandom(seed + entropy)() * (max - min) + min)
-  }
-
-  _getCP1X = (entropy) => {
-    const { seed, width, xVariance } = this.props
-    return (
-      width / 3 +
-      [-1, 1][Math.floor(seedrandom(seed + entropy)() + 0.5)] *
-      seedrandom(seed + entropy * 2)() * width * xVariance
-    )
-  }
-
-  _getCP1Y = (upFirst, startY, minPointY, entropy) => {
-    const { seed, height, yVariance } = this.props
-    const val = upFirst ?
-      startY - seedrandom(seed + entropy)() * height * 2 * yVariance
-    : startY + seedrandom(seed + entropy)() * height * 2 * yVariance
-    return Math.max(0, Math.min(height, val))
-  }
-
-  _getCP2X = (entropy) => {
-    const { seed, width, xVariance } = this.props
-    return (
-      width / 3 * 2 +
-      [-1, 1][Math.floor(seedrandom(seed + entropy)() + 0.5)] *
-      seedrandom(seed + entropy * 2)() * width * xVariance
-    )
-  }
-
-  _getCP2Y = (upFirst, endY, minPointY, entropy) => {
-    const { seed, height, yVariance } = this.props
-    const val = upFirst ?
-      endY + seedrandom(seed + entropy)() * height * 2 * yVariance
-    : endY - seedrandom(seed + entropy)() * height * 2 * yVariance
-    return Math.max(0, Math.min(height, val))
-  }
-
-  setLines = () => {
-    const {
-      backgroundColor,
-      dashSize,
-      dashSpaceSize,
-      discreteColors,
-      height,
-      lineWidth,
-      numLines,
-      width,
-      seed,
-      colors,
-    } = this.props
-
-    const entropyScalar = 791
-    const entropy = Math.floor(seedrandom(seed)() * entropyScalar)
+  drawLines = () => {
     const ctx = this.canvas.getContext('2d')
-
-    // Set up the color spectrum
-    const spectrumValues = discreteColors ?
-      colors.length : Math.max(100, numLines)
-    const spectrum = new Rainbow()
-    spectrum.setNumberRange(1, spectrumValues)
-    spectrum.setSpectrum(...colors)
-
-    // Draw the background
-    ctx.fillStyle=backgroundColor
-    ctx.fillRect(0, 0, width, height)
-
-    // Set the line properties
-    ctx.setLineDash([dashSize, dashSpaceSize])
-    ctx.lineWidth = lineWidth
-
-    // Draw the lines
-    for (let i=0; i < numLines; i++) {
-      ctx.beginPath()
-
-      // Give y values a buffer
-      const minPointY = this._getMinY()
-      const maxPointY = height - minPointY
-
-      // Calculate curve direction
-      const upFirst = this._getUpFirst(i * entropy)
-
-      // Set the starting position
-      const startX = this._getStartX()
-      const startY = this._getStartY(minPointY, maxPointY, i * entropy * 2)
-
-      // Set the ending position
-      const endX = this._getEndX()
-      const endY = this._getEndY(minPointY, maxPointY, startY, i * entropy * 3)
-
-      // Set the first control point values
-      const cp1X = this._getCP1X(i * entropy * 4)
-      const cp1Y = this._getCP1Y(upFirst, startY, minPointY, i + entropy * 5)
-
-      // Set the second control point values
-      const cp2X = this._getCP2X(i * entropy * 5)
-      const cp2Y = this._getCP2Y(upFirst, endY, minPointY, i * entropy * 9)
-
-      // Make the curve
-      ctx.moveTo(startX, startY)
-      ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
-
-      // Set the color
-      const colorIndex = Math.floor(seedrandom(seed + i)() * spectrumValues + 1)
-      const hexColor = spectrum.colourAt(colorIndex)
-      const red = hexPairToNumber(hexColor.slice(0, 2))
-      const green = hexPairToNumber(hexColor.slice(2, 4))
-      const blue = hexPairToNumber(hexColor.slice(4, 6))
-      ctx.strokeStyle = `rgb(${red}, ${green}, ${blue})`
-      ctx.stroke()
-    }
+    drawLines(ctx, this.props)
   }
 
   componentDidMount() {
-    this.setLines()
+    this.drawLines()
   }
 
   componentDidUpdate() {
-    this.setLines()
+    this.drawLines()
   }
 
   render() {
