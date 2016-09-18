@@ -1,0 +1,176 @@
+body {
+  margin: 0;
+}
+
+.App {
+  font-size: 0;
+}
+
+.controls-container {
+  display: inline-block;
+  height: 100vh;
+  width: 200px;
+  overflow-y: scroll;
+  vertical-align: top;
+  padding-right: 15px;
+  padding-left: 10px;
+  background-color: #333;
+  color: #eee;
+}
+
+.controls {
+  padding-bottom: 20px;
+}
+
+.logo {
+  display: block;
+  width: 50px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+input[type="range"] {
+  display: block;
+  width: 100%;
+}
+
+input[type="checkbox"] {
+  margin-left: 10px;
+}
+
+.canvas-control {
+  position: relative;
+  margin-bottom: 20px;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 14px;
+}
+
+.control-value {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #888
+}
+
+.canvas-container {
+  display: inline-block;
+  position: relative;
+  height: 100vh;
+  width: calc(100% - 225px);
+  overflow: scroll;
+}
+
+.canvas-container__dark {
+  background-color: #333;
+  border-color: #222;
+}
+
+.bezier-rainbow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.color-swatches {
+  background-color: #333;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
+.color-swatches__editing {
+  padding-top: 5px;
+}
+
+.color-swatch-group {
+  display: inline-block;
+  position: relative;
+}
+
+
+.color-swatch {
+  height: 60px;
+  width: 60px;
+  cursor: pointer;
+}
+
+.background-color-swatch {
+  width: 120px;
+  margin-right: 10px;
+}
+
+.color-swatch__editing {
+  height: 65px;
+}
+
+.color-swatch-picker {
+  position: absolute;
+  top: -299px;
+  left: 0;
+}
+
+.remove-color-button {
+  position: absolute;
+  font-size: 14px;
+  width: 90px;
+  top: -325px;
+  border-radius: 2px;
+  padding: 5px;
+  background-color: #FFAAA2;
+  color: #8F0500;
+  cursor: pointer;
+}
+
+.remove-color-button:hover {
+  background-color: #FF9A92;
+}
+
+.add-color-button {
+  position: relative;
+  display: inline-block;
+  height: 60px;
+  width: 60px;
+  background-color: #ddd;
+  cursor: pointer;
+}
+.add-color-button:hover  {
+  background-color: #d4d4d4;
+}
+
+.add-color-button-text {
+  position: absolute;
+  top: 11px;
+  left: 21px;
+  font-size: 30px;
+  color: #333;
+}
+
+.share-holder {
+  position: relative;
+  display: inline-block;
+  padding: 8px;
+  width: 185px;
+  margin-top: 10px;
+  font-size: 16px;
+  overflow-y: scroll;
+  white-space: nowrap;
+  background-color: #555;
+}
+
+.copy-button {
+  color: #7CC7FF;
+  cursor: pointer;
+}
+.copy-button:hover {
+  color: #8CD7FF;
+  cursor: pointer;
+}
+
+.noselect {
+  user-select: none;
+}
