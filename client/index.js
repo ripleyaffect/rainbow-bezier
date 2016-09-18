@@ -1,1 +1,1 @@
-console.log('Hello from the bundle')
+console.log('Hello from the bundle!')
