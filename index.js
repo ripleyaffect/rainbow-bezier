@@ -9,9 +9,15 @@ const PORT = process.env.PORT || 8000
 const app = express()
 
 app.use('/static', express.static(`${__dirname}/public`))
+app.set('view engine', 'pug');
 
 app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/public/index.html`)
+  ogUrl = "http://rainbow-bezier.herokuapp.com"
+  ogImageUrl = `${ogUrl}/image?lw=10`
+  res.render(`index`, {
+    ogUrl,
+    ogImageUrl,
+  })
 })
 
 app.get('/image', (req, res) => {
