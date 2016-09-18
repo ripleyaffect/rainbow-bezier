@@ -40,8 +40,18 @@ Controls the size of the dashes on the lines
 ### Line Width
 Controls the thickness of the line
 
-### Night mode
-Toggles night mode on / off
+### Opacity
+Controls the opacity of the lines
+
+### Discrete colors
+Toggles between allowing any color on the gradient to allowing only the selected colors
+
+### Show control points
+Toggle control and end points on and off
+
+
+## Picking colors
+Swatches on the bottom of the app control the background and line colors. By default, the line colors form a gradient.
 
 
 ## Results
