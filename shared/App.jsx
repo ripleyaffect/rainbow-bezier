@@ -98,12 +98,12 @@ class App extends Component {
   constructor(props) {
     super(props)
 
-    this.state = this._parseQueryStringIntoValues({
-      ...getDefaultValues(),
+    this.state = {
+      ...this._parseQueryStringIntoValues(getDefaultValues(), location.search),
       colorEditingIndex: null,
       showShareCopiedMessage: false,
       showImageCopiedMessage: false,
-    }, location.search)
+    }
   }
 
   _parseQueryStringIntoValues = (values, query) => {
@@ -207,6 +207,7 @@ class App extends Component {
       startVariance,
       yVariance,
     } = this.state
+    console.log(colorEditingIndex)
 
     const canAddColor = colors.length < MAX_NUM_COLORS
     const canRemoveColor = colors.length > MIN_NUM_COLORS
