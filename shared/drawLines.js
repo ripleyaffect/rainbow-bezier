@@ -36,11 +36,12 @@ const _getEndY = (seed, min, max, startY, entropy) => {
 }
 
 const _getCP1X = (seed, width, xVariance, entropy) => {
-  return (
+  const val = (
     width / 3 +
     [-1, 1][Math.floor(seedrandom(seed + entropy)() + 0.5)] *
     seedrandom(seed + entropy * 2)() * width * xVariance
   )
+  return Math.max(0, Math.min(width, val))
 }
 
 const _getCP1Y = (seed, height, yVariance, upFirst, startY, entropy) => {
@@ -51,11 +52,12 @@ const _getCP1Y = (seed, height, yVariance, upFirst, startY, entropy) => {
 }
 
 const _getCP2X = (seed, width, xVariance, entropy) => {
-  return (
+  const val = (
     width / 3 * 2 +
     [-1, 1][Math.floor(seedrandom(seed + entropy)() + 0.5)] *
     seedrandom(seed + entropy * 2)() * width * xVariance
   )
+  return Math.max(0, Math.min(width, val))
 }
 
 const _getCP2Y = (seed, height, yVariance, upFirst, endY, entropy) => {
