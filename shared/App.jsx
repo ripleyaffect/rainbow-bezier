@@ -236,7 +236,7 @@ class App extends Component {
     const canAddColor = colors.length < MAX_NUM_COLORS
     const canRemoveColor = colors.length > MIN_NUM_COLORS
     const editingBackground = colorEditingIndex === 'bg'
-    const shareUrl = `https://ripleyaffect.github.io/rainbow-bezier/?${
+    const shareUrl = `http://rainbow-bezier.herokuapp.com/?${
       this._generateQueryString()}`
 
     return (
