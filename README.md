@@ -45,6 +45,10 @@ Toggles night mode on / off
 
 
 ## Results
+![example_1](https://cloud.githubusercontent.com/assets/1026406/18619635/7c6fba56-7dcf-11e6-810f-62a0fbb65208.png)
+![example_2](https://cloud.githubusercontent.com/assets/1026406/18619636/7c764808-7dcf-11e6-9ef6-987c2933f21f.png)
+![example_3](https://cloud.githubusercontent.com/assets/1026406/18619637/7c77f87e-7dcf-11e6-9dec-be044ce39b2e.png)
+![example_4](https://cloud.githubusercontent.com/assets/1026406/18619638/7c7911b4-7dcf-11e6-8cf3-3d7d42776953.png)
 
 
 ---
