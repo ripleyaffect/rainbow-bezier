@@ -94,6 +94,12 @@ class ClickawayColorSwatch extends React.Component {
           <div className="color-swatch-picker">
             <SketchPicker color={color} onChange={onColorChange} />
           </div>}
+        {!editing && canRemove &&
+          <div
+              className="quick-remove-color-button"
+              onClick={onClickRemove}>
+            x
+          </div>}
       </div>
   }
 }
@@ -211,7 +217,6 @@ class App extends Component {
       startVariance,
       yVariance,
     } = this.state
-    console.log(colorEditingIndex)
 
     const canAddColor = colors.length < MAX_NUM_COLORS
     const canRemoveColor = colors.length > MIN_NUM_COLORS

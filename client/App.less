@@ -4,6 +4,7 @@ body {
 
 .App {
   font-size: 0;
+  font-family: 'Roboto Condensed', sans-serif;
 }
 
 .controls-container {
@@ -43,7 +44,6 @@ input[type="checkbox"] {
 .canvas-control {
   position: relative;
   margin-bottom: 20px;
-  font-family: 'Roboto Condensed', sans-serif;
   font-size: 14px;
 }
 
@@ -124,10 +124,36 @@ input[type="checkbox"] {
   background-color: #FFAAA2;
   color: #8F0500;
   cursor: pointer;
+  border: 1px #FF9A92 solid;
+  &:hover {
+    background-color: #FF9A92;
+  }
 }
 
-.remove-color-button:hover {
-  background-color: #FF9A92;
+
+.quick-remove-color-button {
+  display: none;
+  font-size:12px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background-color: #FFAAA2;
+  color: #8F0500;
+  padding-right: 6px;
+  padding-left: 6px;
+  padding-bottom: 3px;
+  border-radius:100%;
+  border: 1px #FF9A92 solid;
+  cursor: pointer;
+  &:hover {
+    background-color: #FF9A92;
+  }
+}
+
+.color-swatch-group:hover {
+  .quick-remove-color-button {
+      display: block;
+  }
 }
 
 .add-color-button {
