@@ -20,6 +20,7 @@
     "react-color": "^2.2.7",
     "react-copy-to-clipboard": "^4.2.3",
     "react-dom": "^15.3.1",
+    "react-helmet": "^3.1.0",
     "react-share": "^1.10.0",
     "seedrandom": "^2.4.2"
   },
