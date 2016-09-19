@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { SketchPicker } from 'react-color'
 import CopyToClipboard from 'react-copy-to-clipboard'
+import { ShareButtons, generateShareIcon } from 'react-share';
 
 import drawLines from './drawLines'
 import logo from './logo.png'
@@ -11,6 +12,9 @@ import parseQueryParams from './parseQueryParams'
 
 const MAX_NUM_COLORS = 8
 const MIN_NUM_COLORS = 2
+const { FacebookShareButton, TwitterShareButton } = ShareButtons
+const FacebookIcon = generateShareIcon('facebook');
+const TwitterIcon = generateShareIcon('twitter');
 
 class BezierRainbow extends Component {
   static defaultProps = getDefaultValues()
@@ -394,6 +398,20 @@ class App extends Component {
                   <span className="control-value copy-button">Copy</span>
                 </CopyToClipboard>}
               <a href={shareUrl} target="_blank" className="share-holder">{shareUrl}</a>
+              <FacebookShareButton
+                  title="Rainbow Bezier"
+                  description="Make your own colorful curves"
+                  url={shareUrl}
+              >
+                <FacebookIcon size={40} />
+              </FacebookShareButton>
+              <TwitterShareButton
+                  title="Rainbow Bezier"
+                  url={shareUrl}
+                  hastags={['reactjs', 'rainbow']}
+              >
+                <TwitterIcon size={40} />
+              </TwitterShareButton>
             </div>
             <div className="canvas-control">
               <span className="noselect">Image link</span>

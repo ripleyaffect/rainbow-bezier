@@ -162,6 +162,27 @@ input[type="checkbox"] {
   background-color: #555;
 }
 
+.SocialMediaShareButton {
+  display: inline-block;
+  margin-top: 5px;
+  padding-right: 28px;
+  padding-left: 27px;
+  cursor: pointer;
+}
+
+.SocialMediaShareButton--facebook {
+  background-color: #3b5998;
+}
+
+.SocialMediaShareButton--twitter {
+  margin-left: 10px;
+  background-color: #00aced;
+}
+
+.social-icon {
+
+}
+
 a {
   color: #7CC7FF;
   text-decoration: none;
