@@ -13,7 +13,7 @@ app.use('/static', express.static(`${__dirname}/public`))
 app.set('view engine', 'pug');
 
 app.get('/', (req, res) => {
-  const ogUrl = "http://rainbow-bezier.herokuapp.com"
+  const ogUrl = "http://rainbows.ripley.nyc"
   const queryString = qs.stringify(req.query)
   const ogImageUrl = `${ogUrl}/image${queryString ? `?${queryString}` : ''}`
   res.render(`index`, {

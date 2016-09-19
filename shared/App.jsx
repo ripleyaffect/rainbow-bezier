@@ -222,7 +222,7 @@ class App extends Component {
     const canRemoveColor = colors.length > MIN_NUM_COLORS
     const editingBackground = colorEditingIndex === 'bg'
 
-    const urlBase = 'http://rainbow-bezier.herokuapp.com'
+    const urlBase = 'http://rainbows.ripley.nyc'
     const queryString = this._generateQueryString()
     const shareUrl = `${urlBase}/?${queryString}`
     const imageUrl = `${urlBase}/image?${queryString}`
