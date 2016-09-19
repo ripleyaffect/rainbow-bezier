@@ -28,7 +28,8 @@ module.exports = (q) => {
     if (q.dss) { values.dashSpaceSize = bound(0, 50, Number(q.dss)) }
     if (q.h) { values.height = bound(1, 2000, Number(q.h)) }
     if (q.lw) { values.lineWidth = bound(1, 100, Number(q.lw)) }
-    if (q.nl) { values.numLines = Math.min(300, Number(q.nl)) }
+    if (q.nl) { values.numLines = bound(0, 300, Number(q.nl)) }
+    if (q.o) { values.opacity = bound(0.1, 1, Number(q.nl)) }
     if (q.ruf) { values.ratioUpFirst = bound(0, 1, Number(q.ruf)) }
     if (q.s) { values.seed = Number(q.s) }
     if (q.w) { values.width = bound(0, 5000, Number(q.w)) }

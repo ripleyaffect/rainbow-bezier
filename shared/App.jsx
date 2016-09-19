@@ -136,7 +136,7 @@ class App extends Component {
     str += `&lw=${this.state.lineWidth}`
     str += `&nl=${this.state.numLines}`
     str += `&o=${this.state.opacity}`
-    str += `&ru=${this.state.ratioUpFirst}`
+    str += `&ruf=${this.state.ratioUpFirst}`
     str += `&s=${this.state.seed}`
     str += `&sv=${this.state.startVariance}`
     str += `&w=${this.state.width}`
