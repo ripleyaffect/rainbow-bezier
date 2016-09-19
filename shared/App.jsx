@@ -411,7 +411,7 @@ class App extends Component {
                 <FacebookIcon size={40} />
               </FacebookShareButton>
               <TwitterShareButton
-                  title="Rainbow Bezier"
+                  title="Check out my bezier masterpiece"
                   url={shareUrl}
                   hastags={['reactjs', 'rainbow']}
               >
