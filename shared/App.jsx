@@ -136,6 +136,7 @@ class App extends Component {
     str += `&lw=${this.state.lineWidth}`
     str += `&nl=${this.state.numLines}`
     str += `&o=${this.state.opacity}`
+    str += `&pr=${this.state.pointsRadius}`
     str += `&ruf=${this.state.ratioUpFirst}`
     str += `&s=${this.state.seed}`
     str += `&sv=${this.state.startVariance}`
@@ -145,7 +146,6 @@ class App extends Component {
 
     // Add flags
     if (this.state.discreteColors) { str += '&discreteColors=1' }
-    if (this.state.showPoints) { str += '&showPoints=1' }
 
     return str
   }
@@ -207,11 +207,11 @@ class App extends Component {
       lineWidth,
       numLines,
       opacity,
+      pointsRadius,
       ratioUpFirst,
       seed,
       showShareCopiedMessage,
       showImageCopiedMessage,
-      showPoints,
       width,
       xVariance,
       startVariance,
@@ -353,7 +353,7 @@ class App extends Component {
                   type="range"
                   name="line-width"
                   min="1"
-                  max="15"
+                  max="25"
                   onChange={(e) => this.valueUpdater('lineWidth')(e.target.value)}
               />
             </div>
@@ -362,11 +362,22 @@ class App extends Component {
               <input
                   value={opacity}
                   type="range"
-                  name="line-width"
+                  name="opacity"
                   min="0.1"
                   max="1"
                   step="0.1"
                   onChange={(e) => this.valueUpdater('opacity')(e.target.value)}
+              />
+            </div>
+            <div className="canvas-control">
+              Points radius <span className="control-value">{pointsRadius}</span>
+              <input
+                  value={pointsRadius}
+                  type="range"
+                  name="points-radius"
+                  min="0"
+                  max="25"
+                  onChange={(e) => this.valueUpdater('pointsRadius')(e.target.value)}
               />
             </div>
             <div className="canvas-control">
@@ -379,19 +390,6 @@ class App extends Component {
                     name="discrete-colors"
                     checked={discreteColors}
                     onChange={(e) => this.valueUpdater('discreteColors')(!discreteColors)}
-                />
-              </span>
-            </div>
-            <div className="canvas-control">
-              Show control points
-              <span className="control-value">
-                {showPoints ? 'on' : 'off'}
-                <input
-                    value={showPoints}
-                    type="checkbox"
-                    name="show-points"
-                    checked={showPoints}
-                    onChange={(e) => this.valueUpdater('showPoints')(!showPoints)}
                 />
               </span>
             </div>
@@ -440,9 +438,9 @@ class App extends Component {
               lineWidth={Number(lineWidth)}
               numLines={Number(numLines)}
               opacity={Number(opacity)}
+              pointsRadius={Number(pointsRadius)}
               ratioUpFirst={Number(ratioUpFirst)}
               seed={Number(seed)}
-              showPoints={showPoints}
               width={Number(width)}
               xVariance={Number(xVariance)}
               startVariance={Number(startVariance)}

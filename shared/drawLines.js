@@ -85,7 +85,7 @@ module.exports = (
     width,
     xVariance,
     yVariance,
-    showPoints,
+    pointsRadius,
   }
 ) => {
   const entropyScalar = 791
@@ -140,19 +140,13 @@ module.exports = (
     const colorString = `rgba(${red}, ${green}, ${blue}, ${opacity})`
 
     // draw the points if needed
-    if (showPoints) {
+    if (pointsRadius) {
       ctx.fillStyle = colorString
       ctx.beginPath()
-      ctx.arc(startX, startY, 5, 0, 2 * Math.PI, false);
+      ctx.arc(cp1X, cp1Y, pointsRadius, 0, 2 * Math.PI, false);
       ctx.fill();
       ctx.beginPath()
-      ctx.arc(cp1X, cp1Y, 5, 0, 2 * Math.PI, false);
-      ctx.fill();
-      ctx.beginPath()
-      ctx.arc(cp2X, cp2Y, 5, 0, 2 * Math.PI, false);
-      ctx.fill();
-      ctx.beginPath()
-      ctx.arc(endX, endY, 5, 0, 2 * Math.PI, false);
+      ctx.arc(cp2X, cp2Y, pointsRadius, 0, 2 * Math.PI, false);
       ctx.fill();
     }
 
