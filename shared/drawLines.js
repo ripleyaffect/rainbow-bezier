@@ -151,11 +151,13 @@ module.exports = (
     }
 
     // Make the curve
-    ctx.beginPath()
-    ctx.moveTo(startX, startY)
-    ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
-    ctx.strokeStyle = colorString
-    ctx.stroke()
+    if (lineWidth) {
+      ctx.beginPath()
+      ctx.moveTo(startX, startY)
+      ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
+      ctx.strokeStyle = colorString
+      ctx.stroke()
+    }
 
   }
 }

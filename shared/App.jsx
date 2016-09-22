@@ -352,7 +352,7 @@ class App extends Component {
                   value={lineWidth}
                   type="range"
                   name="line-width"
-                  min="1"
+                  min="0"
                   max="25"
                   onChange={(e) => this.valueUpdater('lineWidth')(e.target.value)}
               />

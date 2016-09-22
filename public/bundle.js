@@ -27243,7 +27243,7 @@ var App = function (_Component2) {
                 value: lineWidth,
                 type: 'range',
                 name: 'line-width',
-                min: '1',
+                min: '0',
                 max: '25',
                 onChange: function onChange(e) {
                   return _this6.valueUpdater('lineWidth')(e.target.value);
@@ -29108,11 +29108,13 @@ module.exports = function (ctx, _ref) {
     }
 
     // Make the curve
-    ctx.beginPath();
-    ctx.moveTo(startX, startY);
-    ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
-    ctx.strokeStyle = colorString;
-    ctx.stroke();
+    if (lineWidth) {
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
+      ctx.strokeStyle = colorString;
+      ctx.stroke();
+    }
   }
 };
 
@@ -29172,7 +29174,7 @@ module.exports = function (q) {
       values.height = bound(1, 2000, Number(q.h));
     }
     if (q.lw) {
-      values.lineWidth = bound(1, 100, Number(q.lw));
+      values.lineWidth = bound(0, 100, Number(q.lw));
     }
     if (q.nl) {
       values.numLines = bound(0, 300, Number(q.nl));
